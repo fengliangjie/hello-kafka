@@ -1,0 +1,32 @@
+server:
+  port: 8887
+spring:
+  kafka:
+    bootstrap-servers: localhost:9093
+    security:
+      protocol: "ssl"
+    ssl:
+      trust-store-location: file:/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.truststore.jks
+      trust-store-password: 123456
+      key-store-location: file:/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.keystore.jks
+      key-store-password: 123456
+      key-password: 123456
+
+    producer:
+      # 失败重试次数
+      retries: 3
+      # 每次批量发送消息的数量
+      batch-size: 16
+      # 缓存容量
+      buffer-memory: 33554432
+      # 编解码
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    consumer:
+      group-id: group-dafult
+      enable-auto-commit: true
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+

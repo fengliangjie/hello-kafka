@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="message-handler" />
+        <module name="iConnector" />
+        <module name="SeparateSchemaMultitenancy" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="iConnector" target="11" />
+      <module name="message-handler" target="11" />
+      <module name="SeparateSchemaMultitenancy" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SeparateSchemaMultitenancy" options="-parameters" />
+      <module name="iConnector" options="-parameters" />
+      <module name="message-handler" options="-parameters" />
+    </option>
+  </component>
+</project>

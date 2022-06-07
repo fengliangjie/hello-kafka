@@ -1,0 +1,32 @@
+server:
+    port: 8888
+spring:
+    kafka:
+        bootstrap-servers: localhost:9093
+        security:
+            protocol: "ssl"
+        ssl:
+            trust-store-location: file:/Users/hakurei/Projects/kafka-ssl/iConnector/src/main/resources/siemens_001.client.truststore.jks
+            trust-store-password: 123456
+            key-store-location: file:/Users/hakurei/Projects/kafka-ssl/iConnector/src/main/resources/siemens_001.client.keystore.jks
+            key-store-password: 123456
+            key-password: 123456
+
+        producer:
+            # ??????
+            retries: 3
+            # ???????????
+            batch-size: 16
+            # ????
+            buffer-memory: 33554432
+            # ???
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+        consumer:
+            group-id: group-dafult
+            enable-auto-commit: true
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
