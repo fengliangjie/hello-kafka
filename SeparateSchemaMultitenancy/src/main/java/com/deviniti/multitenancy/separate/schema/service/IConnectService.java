@@ -1,8 +1,7 @@
 package com.deviniti.multitenancy.separate.schema.service;
 
-import com.deviniti.multitenancy.separate.schema.entity.param.IConnectPingParam;
-import com.deviniti.multitenancy.separate.schema.entity.param.IConnectRegisterParam;
-import com.deviniti.multitenancy.separate.schema.entity.vo.ConfigurationVo;
+import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
+import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 
 /**
  * @author: liangjie.feng
@@ -14,11 +13,5 @@ public interface IConnectService {
      * @param param
      * @return iConnect configuration
      */
-    ConfigurationVo saveConfiguration(IConnectRegisterParam param);
-
-    /**
-     * update timestamp of healthy monitoring
-     * @param param
-     */
-    void ping(IConnectPingParam param);
+    IConnectorInfoVo saveConfiguration(IConnectorInfoParam param);
 }

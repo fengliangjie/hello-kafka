@@ -114,19 +114,4 @@ TABLESPACE pg_default;
 
 ALTER TABLE sale_product
     OWNER to postgres;
-
-CREATE TABLE configuration
-(
-    id serial,
-    name character varying(255) COLLATE pg_catalog."default",
-    tenant_id character varying(255) COLLATE pg_catalog."default",
-    ts TIMESTAMP
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-ALTER TABLE configuration
-    OWNER to postgres;
     

@@ -1,9 +1,9 @@
 package com.deviniti.multitenancy.separate.schema.service;
 
 import com.deviniti.multitenancy.separate.schema.entity.param.ClientParam;
-import com.deviniti.multitenancy.separate.schema.entity.param.ConfigurationParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
-import com.deviniti.multitenancy.separate.schema.entity.vo.ConfigurationVo;
+import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 
 import java.util.List;
 
@@ -12,13 +12,25 @@ import java.util.List;
  * @date: 2022/5/31 4:01 PM
  */
 public interface IClientService {
+
     /**
-     * get configurations of given tenantId
+     * get iConnector infos
      * @param clientParam
      * @param pageParam
      * @return
      */
-    List<ConfigurationVo> getConfigurations(ClientParam clientParam, PageParam pageParam);
+    List<IConnectorInfoVo> getConnectorInfos(ClientParam clientParam, PageParam pageParam);
 
-    ConfigurationVo updateConfiguration(ConfigurationParam configurationParam);
+    /**
+     * update iConnector info
+     * @param connectorInfoParam
+     * @return
+     */
+    IConnectorInfoVo updateConnectorInfo(IConnectorInfoParam connectorInfoParam);
+
+    /**
+     * register iConnector
+     * @param connectorId
+     */
+    void registerConnector(String connectorId);
 }
