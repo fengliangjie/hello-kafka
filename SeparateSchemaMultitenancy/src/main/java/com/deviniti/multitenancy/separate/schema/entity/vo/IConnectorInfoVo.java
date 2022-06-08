@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "iConnector info")
+@ApiModel(value = "iConnector info to client")
 public class IConnectorInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

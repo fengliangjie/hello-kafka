@@ -1,7 +1,7 @@
 package com.deviniti.multitenancy.separate.schema.controller;
 
-import com.deviniti.multitenancy.separate.schema.entity.param.ClientParam;
-import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientQueryParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 import com.deviniti.multitenancy.separate.schema.service.IClientService;
@@ -25,23 +25,23 @@ public class ClientController {
 
     /**
      * get iConnector infos
-     * @param clientParam
+     * @param clientQueryParam
      * @param pageParam
      * @return
      */
     @GetMapping("/getConnectorInfos")
-    public ResponseEntity<List<IConnectorInfoVo>> getConnectorInfos(@Validated ClientParam clientParam, @Validated PageParam pageParam) {
-        return ResponseEntity.ok(clientService.getConnectorInfos(clientParam, pageParam));
+    public ResponseEntity<List<IConnectorInfoVo>> getConnectorInfos(@Validated ClientQueryParam clientQueryParam, @Validated PageParam pageParam) {
+        return ResponseEntity.ok(clientService.getConnectorInfos(clientQueryParam, pageParam));
     }
 
     /**
      * update iConnector info
-     * @param connectorInfoParam
+     * @param clientUpdateParam
      * @return
      */
     @PutMapping("/updateConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@RequestBody IConnectorInfoParam connectorInfoParam) {
-        return ResponseEntity.ok(clientService.updateConnectorInfo(connectorInfoParam));
+    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@RequestBody ClientUpdateParam clientUpdateParam) {
+        return ResponseEntity.ok(clientService.updateConnectorInfo(clientUpdateParam));
     }
 
     /**

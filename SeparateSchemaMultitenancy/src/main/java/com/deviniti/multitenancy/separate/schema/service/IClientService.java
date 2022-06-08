@@ -1,7 +1,7 @@
 package com.deviniti.multitenancy.separate.schema.service;
 
-import com.deviniti.multitenancy.separate.schema.entity.param.ClientParam;
-import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientQueryParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 
@@ -15,18 +15,18 @@ public interface IClientService {
 
     /**
      * get iConnector infos
-     * @param clientParam
+     * @param clientQueryParam
      * @param pageParam
      * @return
      */
-    List<IConnectorInfoVo> getConnectorInfos(ClientParam clientParam, PageParam pageParam);
+    List<IConnectorInfoVo> getConnectorInfos(ClientQueryParam clientQueryParam, PageParam pageParam);
 
     /**
      * update iConnector info
-     * @param connectorInfoParam
+     * @param clientUpdateParam
      * @return
      */
-    IConnectorInfoVo updateConnectorInfo(IConnectorInfoParam connectorInfoParam);
+    IConnectorInfoVo updateConnectorInfo(ClientUpdateParam clientUpdateParam);
 
     /**
      * register iConnector

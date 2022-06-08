@@ -1,7 +1,7 @@
 package com.deviniti.multitenancy.separate.schema.service.impl;
 
-import com.deviniti.multitenancy.separate.schema.entity.param.ClientParam;
-import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientQueryParam;
+import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 import com.deviniti.multitenancy.separate.schema.repository.ConfigurationRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author: liangjie.feng
@@ -26,7 +25,7 @@ public class ClientServiceImpl implements IClientService {
     private final ConfigurationRepository configurationRepository;
 
     @Override
-    public List<IConnectorInfoVo> getConnectorInfos(ClientParam clientParam, PageParam pageParam) {
+    public List<IConnectorInfoVo> getConnectorInfos(ClientQueryParam clientQueryParam, PageParam pageParam) {
 //        return configurationRepository.findAll(
 //                Example.of(IConnectorInfo.builder().tenantId(clientParam.getTenantId()).build()), PageRequest.of(pageParam.getPageNumber(), pageParam.getPageSize()))
 //                .stream()
@@ -36,7 +35,7 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
-    public IConnectorInfoVo updateConnectorInfo(IConnectorInfoParam connectorInfoParam) {
+    public IConnectorInfoVo updateConnectorInfo(ClientUpdateParam clientUpdateParam) {
         //Optional<IConnectorInfo> configuration = configurationRepository.findById(configurationParam.getId());
         // TODO: update DB
         // TODO: transfer message-handler interface

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -69,7 +68,7 @@ public class IConnectorInfo implements Serializable {
      * info The time it was generated
      */
     @Column(name = "DATE_TIME")
-    private LocalDateTime dateTime;
+    private Long dateTime;
 
     /**
      * modules

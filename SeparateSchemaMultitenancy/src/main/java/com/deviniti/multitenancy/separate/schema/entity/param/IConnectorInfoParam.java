@@ -24,8 +24,8 @@ public class IConnectorInfoParam {
 
     @lombok.Data
     static class Module {
-        String name;
-        String version;
-        Integer status;
+        private String name;
+        private String version;
+        private Integer status;
     }
 }

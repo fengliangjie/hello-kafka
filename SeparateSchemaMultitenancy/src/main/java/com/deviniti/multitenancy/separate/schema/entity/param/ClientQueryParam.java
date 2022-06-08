@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 @ApiModel("client param")
-public class ClientParam {
+public class ClientQueryParam {
     private Long id;
     private String name;
     @ApiModelProperty(name = "tenant_id")
