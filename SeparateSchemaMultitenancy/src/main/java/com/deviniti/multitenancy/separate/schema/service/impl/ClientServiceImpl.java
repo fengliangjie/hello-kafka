@@ -38,12 +38,11 @@ public class ClientServiceImpl implements IClientService {
     public IConnectorInfoVo updateConnectorInfo(ClientUpdateParam clientUpdateParam) {
         //Optional<IConnectorInfo> configuration = configurationRepository.findById(configurationParam.getId());
         // TODO: update DB
-        // TODO: transfer message-handler interface
         return null;
     }
 
     @Override
     public void registerConnector(String connectorId) {
-
+        // TODO: transfer message-handler interface
     }
 }

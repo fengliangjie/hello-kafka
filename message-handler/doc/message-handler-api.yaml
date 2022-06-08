@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Message handler
+  version: v0
+servers:
+  - url: ''
+paths:
+  /api/v1/configuration/manager/register:
+    post:
+      summary: '104: Send iConnector configuration to MQ'
+      tags:
+        - i-connector-register-controller
+      operationId: register
+      parameters:
+        - name: tenantId
+          description: 'TenantId.'
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: connectorId
+          description: 'IConnector ID.'
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /iconnector-config.%s-%s:
+    post:
+      summary: '105: Send iConnector configuration to iConnector'
+      tags:
+        - kafka-producer
+      operationId: send iConnector configuration to iConnector
+      parameters:
+        - name: topic
+          description: 'topic'
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /iconnector-info.*:
+    get:
+      summary: '108: get iConnector info from MQ'
+      tags:
+        - kafka-consumer
+      operationId: get iConnector info from MQ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+  /iconnector-data.*:
+    get:
+      summary: '106: get data from MQ'
+      tags:
+        - kafka-consumer
+      operationId: get data from MQ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

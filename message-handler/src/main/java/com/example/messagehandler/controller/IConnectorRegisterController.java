@@ -1,6 +1,5 @@
 package com.example.messagehandler.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.messagehandler.kafkaProducer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,25 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Author: liangjie.feng
- * @Date: 2022/4/24 17:18
+ * @author: liangjie.feng
+ * @date: 2022/6/8 4:11 PM
  */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class ProducerController {
+@RequestMapping("/api/v1/configuration/manager")
+public class IConnectorRegisterController {
 
     private final KafkaProducer kafkaProducer;
 
-    @RequestMapping("/send")
-    public String send(String topic, String id, String name) {
-        kafkaProducer.send(topic, id, name);
-        return "success";
-    }
+    private static final String CONFIG_TOPIC = "iconnector-config.%s-%s";
 
-    @PostMapping("/send")
-    public String sendJson(String topic, @RequestBody JSONObject data) {
-        kafkaProducer.send(topic, data.toJSONString());
-        return "success";
+    @PostMapping("/register")
+    public void register(String tenantId, String connectorId, @RequestBody String data) {
+        kafkaProducer.send(String.format(CONFIG_TOPIC, tenantId, connectorId), data);
     }
 }

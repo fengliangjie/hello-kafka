@@ -36,9 +36,4 @@ public class IConnectController {
         connectService.saveConfiguration(param);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/hhh")
-    public void test(IConnectorInfo iConnectorInfo, IConnectorConfig connectorConfig, IConnectorModule connectorModule) {
-        return;
-    }
 }
