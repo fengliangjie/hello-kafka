@@ -2,7 +2,6 @@ package com.deviniti.multitenancy.separate.schema.entity.param;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,11 +11,11 @@ import java.util.List;
 @Data
 public class IConnectorInfoParam {
     private String connectorId;
-    private LocalDateTime dateTime;
+    private Long dateTime;
     private Data data;
 
     @lombok.Data
-    class Data {
+    static class Data {
         private Integer status;
         private Integer collectStatus;
         private String version;
@@ -24,7 +23,7 @@ public class IConnectorInfoParam {
     }
 
     @lombok.Data
-    class Module {
+    static class Module {
         String name;
         String version;
         Integer status;

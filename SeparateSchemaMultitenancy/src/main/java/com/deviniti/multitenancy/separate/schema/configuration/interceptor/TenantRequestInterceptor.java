@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -19,7 +20,7 @@ public class TenantRequestInterceptor implements AsyncHandlerInterceptor{
 	 @Override
 	 public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		 return Optional.of(request)
-				 .map(req -> req.getHeader("tenantId"))
+				 .map(req -> req.getHeader("X-TENANT-ID"))
 				 .map(this::setTenantContext)
 				 .orElse(false);
 	}
