@@ -3,9 +3,9 @@ info:
   title: Message handler
   version: v0
 servers:
-  - url: ''
+  - url: 'https://sigreen.siemens.cloud.cn/message'
 paths:
-  /api/v1/configuration/manager/register:
+  /api/v1/iconnector/registration:
     post:
       summary: '104: Send iConnector configuration to MQ'
       tags:

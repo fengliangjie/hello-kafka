@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/configuration/manager")
+@RequestMapping("/api/v1/iconnector")
 public class IConnectorRegisterController {
 
     private final KafkaProducer kafkaProducer;
 
     private static final String CONFIG_TOPIC = "iconnector-config.%s-%s";
 
-    @PostMapping("/register")
+    @PostMapping("/registration")
     public void register(String tenantId, String connectorId, @RequestBody String data) {
         kafkaProducer.send(String.format(CONFIG_TOPIC, tenantId, connectorId), data);
     }
