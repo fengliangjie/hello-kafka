@@ -15,7 +15,7 @@ public class IConnectorInfoParam {
     private Data data;
 
     @lombok.Data
-    static class Data {
+    public static class Data {
         private Integer status;
         private Integer collectStatus;
         private String version;
@@ -23,7 +23,7 @@ public class IConnectorInfoParam {
     }
 
     @lombok.Data
-    static class Module {
+    public static class Module {
         private String name;
         private String version;
         private Integer status;

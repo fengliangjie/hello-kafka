@@ -21,8 +21,8 @@ public class FlywayConfiguration {
 	@PostConstruct
 	Boolean tennantSchemaFlyway() {
 		
-		migrateTennants("tenant1");
-		migrateTennants("tenant2");
+		migrateTennants("siemens_001");
+		migrateTennants("siemens_002");
 		return true;
 	}
 

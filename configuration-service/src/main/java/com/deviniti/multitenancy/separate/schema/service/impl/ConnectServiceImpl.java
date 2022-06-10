@@ -4,6 +4,7 @@ import com.deviniti.multitenancy.separate.schema.entity.param.ClientQueryParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
+import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorInfo;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
 import com.deviniti.multitenancy.separate.schema.repository.ConfigurationRepository;
 import com.deviniti.multitenancy.separate.schema.service.IConnectService;
@@ -30,13 +31,14 @@ public class ConnectServiceImpl implements IConnectService {
 
     @Override
     public IConnectorInfoVo saveConfiguration(IConnectorInfoParam param) {
-//        LocalDateTime localDateTime = Instant.ofEpochSecond(param.getDateTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 //        return ConfigurationMapper.mapToVo(configurationRepository.save(
 //                IConnectorInfo.builder()
-//                        .name(param.getName())
-//                        .tenantId(param.getTenantId())
-//                        .timestamp(Timestamp.valueOf(LocalDateTime.now()))
-//                        .build()));
+//                        .connectorId(param.getConnectorId())
+//                        .status(param.getData().getStatus())
+//                        .collectStatus(param.getData().getCollectStatus())
+//                        .version(param.getData().getVersion())
+//                        .dateTime(param.getDateTime())
+//                        .modules()
         return null;
     }
 

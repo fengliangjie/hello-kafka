@@ -28,13 +28,13 @@ public class IConnectorInfo implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
     /**
      * Connector id
      */
-    @Column(name = "CONNECTOR_ID", unique = true)
+    @Column(name = "connector_id", unique = true)
     private String connectorId;
 
     /**
@@ -44,7 +44,7 @@ public class IConnectorInfo implements Serializable {
      * 1: Partial abnormal
      * 2: Abnormal
      */
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private Integer status;
 
     /**
@@ -55,32 +55,32 @@ public class IConnectorInfo implements Serializable {
      * 1: Configure the delivery exception
      * 2: Data handling upload exceptions
      */
-    @Column(name = "COLLECT_STATUS")
+    @Column(name = "collect_status")
     private Integer collectStatus;
 
     /**
      * version
      */
-    @Column(name = "VERSION")
+    @Column(name = "version")
     private String version;
 
     /**
      * info The time it was generated
      */
-    @Column(name = "DATE_TIME")
+    @Column(name = "date_time")
     private Long dateTime;
 
     /**
      * modules
      */
     @OneToMany
-    @JoinColumn(name = "INFO_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorModule> modules;
 
     /**
      * configs
      */
     @OneToMany
-    @JoinColumn(name = "INFO_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorConfig> configs;
 }
