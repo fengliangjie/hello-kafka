@@ -1,4 +1,4 @@
-package com.example.iconnector.kafkaProducer;
+package com.example.iconnector.kafkaproducer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

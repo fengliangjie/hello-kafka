@@ -1,4 +1,4 @@
-package com.example.messagehandler.kafkaConsumer;
+package com.example.messagehandler.kafkaconsumer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

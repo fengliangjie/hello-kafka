@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SeparateSchemaMultitenancy/SeparateSchemaMultitenancy.iml" filepath="$PROJECT_DIR$/SeparateSchemaMultitenancy/SeparateSchemaMultitenancy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SeparateSchemaMultitenancy/configuration-service.iml" filepath="$PROJECT_DIR$/SeparateSchemaMultitenancy/configuration-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/hello-kafka.iml" filepath="$PROJECT_DIR$/.idea/hello-kafka.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iConnector/iConnector.iml" filepath="$PROJECT_DIR$/iConnector/iConnector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iConnector/iconnector.iml" filepath="$PROJECT_DIR$/iConnector/iconnector.iml" />
       <module fileurl="file://$PROJECT_DIR$/message-handler/message-handler.iml" filepath="$PROJECT_DIR$/message-handler/message-handler.iml" />
     </modules>
   </component>
