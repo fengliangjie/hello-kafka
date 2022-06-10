@@ -1,20 +1,24 @@
 package com.example.messagehandler.util;
 
 import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateAclsResult;
 import org.apache.kafka.common.acl.AccessControlEntry;
 import org.apache.kafka.common.acl.AclBinding;
 import org.apache.kafka.common.acl.AclOperation;
 import org.apache.kafka.common.acl.AclPermissionType;
+import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.resource.PatternType;
 import org.apache.kafka.common.resource.ResourcePattern;
 import org.apache.kafka.common.resource.ResourceType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author: liangjie.feng
@@ -25,18 +29,39 @@ public class KafkaAclUtil {
 
     private final AdminClient client;
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String servers;
+
+    @Value("${spring.kafka.security.protocol}")
+    private String securityProtocol;
+
+    @Value("${spring.kafka.ssl.trust-store-location}")
+    private String trustStoreLocation;
+
+    @Value("${spring.kafka.ssl.trust-store-password}")
+    private String trustStorePassword;
+
+    @Value("${spring.kafka.ssl.key-store-location}")
+    private String keyStoreLocation;
+
+    @Value("${spring.kafka.ssl.key-store-password}")
+    private String keyStorePassword;
+
+    @Value("${spring.kafka.ssl.key-password}")
+    private String keyPassword;
+
     KafkaAclUtil() {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9093");
-        props.put("security.protocol","SSL");
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
+        props.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, securityProtocol);
         /**
          * 用来开通acl权限的 jks 应该是固定的，也就是管理员的账号
          */
-        props.put("ssl.truststore.location","/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.truststore.jks");
-        props.put("ssl.truststore.password", "123456");
-        props.put("ssl.keystore.location", "/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.keystore.jks");
-        props.put("ssl.keystore.password", "123456");
-        props.put("ssl.key.password", "123456");
+        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, trustStoreLocation);
+        props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, trustStorePassword);
+        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, keyStoreLocation);
+        props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, keyStorePassword);
+        props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, keyPassword);
         client = AdminClient.create(props);
     }
 
@@ -47,13 +72,17 @@ public class KafkaAclUtil {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public void createAcl(String topic, String principal, String group) throws ExecutionException, InterruptedException {
+    public void createAcl(String topic, String principal, String group) {
         AclBinding producer = new AclBinding(new ResourcePattern(ResourceType.TOPIC, topic, PatternType.LITERAL), new AccessControlEntry(principal, "*", AclOperation.ALL, AclPermissionType.ALLOW));
         AclBinding consumer = new AclBinding(new ResourcePattern(ResourceType.GROUP, group, PatternType.LITERAL), new AccessControlEntry(principal, "*", AclOperation.ALL, AclPermissionType.ALLOW));
         Set<AclBinding> set = new HashSet<>();
         set.add(producer);
         set.add(consumer);
         CreateAclsResult result = client.createAcls(set);
-        result.all().get();
+        try {
+            result.all().get(3000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

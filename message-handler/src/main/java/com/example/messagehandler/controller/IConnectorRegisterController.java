@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.messagehandler.constant.ConstantValus.CONFIG_TOPIC;
+
 /**
  * @author: liangjie.feng
  * @date: 2022/6/8 4:11 PM
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class IConnectorRegisterController {
 
     private final KafkaProducer kafkaProducer;
-
-    private static final String CONFIG_TOPIC = "iconnector-config.%s-%s";
 
     @PostMapping("/registration")
     public void register(String tenantId, String connectorId, @RequestBody String data) {

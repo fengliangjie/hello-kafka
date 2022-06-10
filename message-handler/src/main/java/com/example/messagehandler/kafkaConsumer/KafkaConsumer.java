@@ -7,10 +7,15 @@ import com.example.messagehandler.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.messagehandler.constant.ConstantValus.*;
 
 /**
  * @Author: liangjie.feng
@@ -25,72 +30,62 @@ public class KafkaConsumer {
 
     private final KafkaAclUtil kafkaAclUtil;
 
-    private static final String CONFIG_TOPIC = "iconnector-config.%s-%s";
-
-    private static final String DATA_TOPIC = "iconnector-data.%s-%s";
-
-    private static final String CONFIG_GROUP = "group-config";
-
-    private static final String DATA_GROUP = "group-data";
-
-    private static final String PRINCIPAL = "User:CN=%s";
-
     /**
      * consumer of data
      *
-     * insert or update db
-     *
-     * 正则表达式动态监听多个topic: topicPattern = "siemens_test.*"
      * @param consumerRecord
      */
     @KafkaListener(topicPattern = "iconnector-data.*", groupId = "group-data")
     public void kafkaListener(ConsumerRecord<String, String> consumerRecord) {
-        String value = consumerRecord.value();
-        System.out.println("=====data: " + value);
-//        JSONObject jsonObject = JSON.parseObject(value);
-//        String tenantId = jsonObject.getString("tenantId");
-//
-//        // headers
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("tenantId", tenantId);
-//
-//        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://", headers, null, jsonObject);
-//        mono.subscribe(responseEntity -> {
-//            String body = responseEntity.getBody();
-//            System.out.println("response:" + body);
-//        });
+        JSONObject value = JSON.parseObject(consumerRecord.value());
+
+        // tenantId
+        String tenantId = getTenantId(consumerRecord.topic());
+
+        // headers
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-TENANT-ID", tenantId);
+
+        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://", headers, null, value);
+        mono.subscribe();
     }
 
     /**
-     * consumer of registration
-     *
-     * insert into db
+     * consumer of info
      *
      * @param consumerRecord
      */
     @KafkaListener(topicPattern = "iconnector-info.*", groupId = "group-info")
-    public void iConnectRegistrationListener(ConsumerRecord<String, String> consumerRecord) throws ExecutionException, InterruptedException {
+    public void iConnectRegistrationListener(ConsumerRecord<String, String> consumerRecord) {
         JSONObject value = JSON.parseObject(consumerRecord.value());
-        String topic = consumerRecord.topic();
+
+        // tenantId
+        String tenantId = getTenantId(consumerRecord.topic());
+
+        // createAcl
+        //createAcl(tenantId, value);
+
+        // headers
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-TENANT-ID", tenantId);
+
+        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://localhost:8886/api/v1/iconnector/info", headers, null, value);
+        mono.subscribe();
+    }
+
+    private String getTenantId(String topic) {
         String[] topicArr = topic.split("\\.");
-        String tenantId = topicArr[topicArr.length - 1];
+        String tenantIdAndConnectorId = topicArr[topicArr.length - 1];
+        String[] tenantIdAndConnectorIdArr = tenantIdAndConnectorId.split("-");
+        return tenantIdAndConnectorIdArr[0];
+    }
+
+    private void createAcl(String tenantId, JSONObject value) {
         String connectorId = value.getString("connectorId");
         int collectStatus = value.getJSONObject("data").getIntValue("collectStatus");
-        System.out.println("=====receive message=====");
         if (collectStatus == -1) {
-            System.out.println("=====create acl=====");
             kafkaAclUtil.createAcl(String.format(CONFIG_TOPIC, tenantId, connectorId), String.format(PRINCIPAL, tenantId), CONFIG_GROUP);
             kafkaAclUtil.createAcl(String.format(DATA_TOPIC, tenantId, connectorId), String.format(PRINCIPAL, tenantId), DATA_GROUP);
         }
-
-        // headers
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("tenantId", tenantId);
-//
-//        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://localhost:8886", headers, null, value);
-//        mono.subscribe(responseEntity -> {
-//            String body = responseEntity.getBody();
-//            System.out.println("=====result: " + body);
-//        });
     }
 }
