@@ -1,5 +1,6 @@
 package com.example.messagehandler.util;
 
+import lombok.Data;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateAclsResult;
@@ -24,33 +25,12 @@ import java.util.concurrent.TimeUnit;
  * @author: liangjie.feng
  * @date: 2022/6/7 6:16 PM
  */
-@Component
+@Data
 public class KafkaAclUtil {
 
     private final AdminClient client;
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String servers;
-
-    @Value("${spring.kafka.security.protocol}")
-    private String securityProtocol;
-
-    @Value("${spring.kafka.ssl.trust-store-location}")
-    private String trustStoreLocation;
-
-    @Value("${spring.kafka.ssl.trust-store-password}")
-    private String trustStorePassword;
-
-    @Value("${spring.kafka.ssl.key-store-location}")
-    private String keyStoreLocation;
-
-    @Value("${spring.kafka.ssl.key-store-password}")
-    private String keyStorePassword;
-
-    @Value("${spring.kafka.ssl.key-password}")
-    private String keyPassword;
-
-    KafkaAclUtil() {
+    public KafkaAclUtil(String servers, String securityProtocol, String trustStoreLocation, String trustStorePassword, String keyStoreLocation, String keyStorePassword, String keyPassword) {
         Properties props = new Properties();
         props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, securityProtocol);

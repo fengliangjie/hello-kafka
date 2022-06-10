@@ -1,16 +1,24 @@
 server:
   port: 8887
+
+kafka:
+  ssl:
+    location:
+      truststore: /Users/hakurei/Projects/hello-kafka/message-handler/src/main/resources/kafka.server.truststore.jks
+      keystore: /Users/hakurei/Projects/hello-kafka/message-handler/src/main/resources/kafka.server.keystore.jks
+    password: 123456
+
 spring:
   kafka:
     bootstrap-servers: localhost:9093
     security:
       protocol: "ssl"
     ssl:
-      trust-store-location: file:/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.truststore.jks
-      trust-store-password: 123456
-      key-store-location: file:/Users/hakurei/Projects/kafka-ssl/message-handler/src/main/resources/kafka.server.keystore.jks
-      key-store-password: 123456
-      key-password: 123456
+      trust-store-location: file:${kafka.ssl.location.truststore}
+      trust-store-password: ${kafka.ssl.password}
+      key-store-location: file:${kafka.ssl.location.keystore}
+      key-store-password: ${kafka.ssl.password}
+      key-password: ${kafka.ssl.password}
 
     producer:
       # 失败重试次数
