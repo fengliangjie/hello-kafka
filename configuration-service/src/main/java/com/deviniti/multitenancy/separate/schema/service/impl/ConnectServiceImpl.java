@@ -5,7 +5,9 @@ import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
 import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorInfo;
+import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorModule;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
+import com.deviniti.multitenancy.separate.schema.mapper.ConfigurationMapper;
 import com.deviniti.multitenancy.separate.schema.repository.ConfigurationRepository;
 import com.deviniti.multitenancy.separate.schema.service.IConnectService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: liangjie.feng
@@ -31,15 +35,17 @@ public class ConnectServiceImpl implements IConnectService {
 
     @Override
     public IConnectorInfoVo saveConfiguration(IConnectorInfoParam param) {
-//        return ConfigurationMapper.mapToVo(configurationRepository.save(
-//                IConnectorInfo.builder()
-//                        .connectorId(param.getConnectorId())
-//                        .status(param.getData().getStatus())
-//                        .collectStatus(param.getData().getCollectStatus())
-//                        .version(param.getData().getVersion())
-//                        .dateTime(param.getDateTime())
-//                        .modules()
-        return null;
+        List<IConnectorModule> modules = param.getData().getModules().stream().map(t -> IConnectorModule.builder().name(t.getName()).version(t.getVersion()).status(t.getStatus()).build()).collect(Collectors.toList());
+        IConnectorInfo info = IConnectorInfo.builder()
+                .connectorId(param.getConnectorId())
+                .status(param.getData().getStatus())
+                .collectStatus(param.getData().getCollectStatus())
+                .version(param.getData().getVersion())
+                .dateTime(param.getDateTime())
+                .modules(modules)
+                .configs(new ArrayList<>())
+                .build();
+        return ConfigurationMapper.mapToVo(configurationRepository.saveAndFlush(info));
     }
 
     @Override

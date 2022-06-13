@@ -18,6 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(name = "iconnector_config")
 @EqualsAndHashCode(callSuper=false)
+@SequenceGenerator(name="seq_gen", sequenceName="iconnector_config_id_seq", allocationSize = 1, initialValue = 1)
 public class IConnectorConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +27,7 @@ public class IConnectorConfig implements Serializable {
      * Id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator="seq_gen")
     @Column(name = "id")
     private Long id;
 }

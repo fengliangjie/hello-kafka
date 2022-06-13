@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.iconnector_info
 (
-    id bigint NOT NULL,
-    connector_id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    id bigserial NOT NULL,
+    connector_id character varying(255) COLLATE pg_catalog."default" NOT NULL UNIQUE,
     status integer,
     collect_status integer,
     version character varying(255) COLLATE pg_catalog."default",
@@ -16,8 +16,8 @@ ALTER TABLE IF EXISTS public.iconnector_info
 
 CREATE TABLE IF NOT EXISTS public.iconnector_config
 (
-    id bigint NOT NULL,
-    info_id bigint NOT NULL,
+    id bigserial NOT NULL,
+    info_id bigint,
     CONSTRAINT iconnector_config_pkey PRIMARY KEY (id),
     CONSTRAINT iconnector_info_config FOREIGN KEY (info_id)
         REFERENCES public.iconnector_info (id) MATCH SIMPLE
@@ -32,11 +32,11 @@ ALTER TABLE IF EXISTS public.iconnector_config
 
 CREATE TABLE IF NOT EXISTS public.iconnector_module
 (
-    id bigint NOT NULL,
+    id bigserial NOT NULL,
     name character varying(255) COLLATE pg_catalog."default",
     version character varying(255) COLLATE pg_catalog."default",
     status integer,
-    info_id bigint NOT NULL,
+    info_id bigint,
     CONSTRAINT iconnector_module_pkey PRIMARY KEY (id),
     CONSTRAINT iconnector_info_module FOREIGN KEY (info_id)
         REFERENCES public.iconnector_info (id) MATCH SIMPLE

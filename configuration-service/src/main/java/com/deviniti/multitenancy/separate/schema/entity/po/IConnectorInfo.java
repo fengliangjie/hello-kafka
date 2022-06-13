@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "iconnector_info")
 @EqualsAndHashCode(callSuper=false)
+@SequenceGenerator(name="seq_gen", sequenceName="iconnector_info_id_seq", allocationSize = 1, initialValue = 1)
 public class IConnectorInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +28,7 @@ public class IConnectorInfo implements Serializable {
      * Id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator="seq_gen")
     @Column(name = "id")
     private Long id;
 
@@ -73,14 +74,14 @@ public class IConnectorInfo implements Serializable {
     /**
      * modules
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorModule> modules;
 
     /**
      * configs
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorConfig> configs;
 }

@@ -66,11 +66,11 @@ public class KafkaConsumer {
         createAcl(tenantId, value);
 
         // headers
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("X-TENANT-ID", tenantId);
-//
-//        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://localhost:8886/api/v1/iconnector/info", headers, null, value);
-//        mono.subscribe();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-TENANT-ID", tenantId);
+
+        Mono<ResponseEntity<String>> mono = webClientUtil.post("http://localhost:8886/api/v1/iconnector/info", headers, null, value);
+        mono.subscribe();
     }
 
     private String getTenantId(String topic) {
