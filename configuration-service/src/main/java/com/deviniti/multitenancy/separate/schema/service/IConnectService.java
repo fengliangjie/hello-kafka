@@ -18,7 +18,7 @@ public interface IConnectService {
      * @param param
      * @return iConnect configuration
      */
-    IConnectorInfoVo saveConfiguration(IConnectorInfoParam param);
+    void info(IConnectorInfoParam param);
 
     /**
      * get iConnector infos

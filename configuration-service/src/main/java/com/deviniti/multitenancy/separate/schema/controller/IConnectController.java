@@ -39,7 +39,7 @@ public class IConnectController {
      */
     @PostMapping("/info")
     public ResponseEntity<String> connectorInfo(@RequestBody IConnectorInfoParam param) {
-        connectService.saveConfiguration(param);
+        connectService.info(param);
         return ResponseEntity.ok().build();
     }
 

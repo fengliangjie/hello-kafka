@@ -74,14 +74,14 @@ public class IConnectorInfo implements Serializable {
     /**
      * modules
      */
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorModule> modules;
 
     /**
      * configs
      */
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "info_id", referencedColumnName = "id")
     private List<IConnectorConfig> configs;
 }

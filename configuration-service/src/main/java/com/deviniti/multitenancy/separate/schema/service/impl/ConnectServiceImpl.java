@@ -12,14 +12,15 @@ import com.deviniti.multitenancy.separate.schema.repository.ConfigurationReposit
 import com.deviniti.multitenancy.separate.schema.service.IConnectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,27 +35,39 @@ public class ConnectServiceImpl implements IConnectService {
     private final ConfigurationRepository configurationRepository;
 
     @Override
-    public IConnectorInfoVo saveConfiguration(IConnectorInfoParam param) {
-        List<IConnectorModule> modules = param.getData().getModules().stream().map(t -> IConnectorModule.builder().name(t.getName()).version(t.getVersion()).status(t.getStatus()).build()).collect(Collectors.toList());
-        IConnectorInfo info = IConnectorInfo.builder()
-                .connectorId(param.getConnectorId())
-                .status(param.getData().getStatus())
-                .collectStatus(param.getData().getCollectStatus())
-                .version(param.getData().getVersion())
-                .dateTime(param.getDateTime())
-                .modules(modules)
-                .configs(new ArrayList<>())
-                .build();
-        return ConfigurationMapper.mapToVo(configurationRepository.saveAndFlush(info));
+    public void info(IConnectorInfoParam param) {
+        IConnectorInfo info;
+        IConnectorInfoParam.Data data = param.getData();
+        List<IConnectorModule> modules = data.getModules().stream().map(t -> IConnectorModule.builder().name(t.getName()).version(t.getVersion()).status(t.getStatus()).build()).collect(Collectors.toList());
+        Optional<IConnectorInfo> optional = configurationRepository.findOne(Example.of(IConnectorInfo.builder().connectorId(param.getConnectorId()).build()));
+        if (optional.isPresent()) {
+            // update
+            info = optional.get();
+            info.setStatus(data.getStatus());
+            info.setCollectStatus(data.getCollectStatus());
+            info.setVersion(data.getVersion());
+            info.setDateTime(param.getDateTime());
+            info.getModules().clear();
+            info.getModules().addAll(modules);
+        } else {
+            // insert
+            info = IConnectorInfo.builder()
+                    .connectorId(param.getConnectorId())
+                    .status(data.getStatus())
+                    .collectStatus(data.getCollectStatus())
+                    .version(data.getVersion())
+                    .dateTime(param.getDateTime())
+                    .modules(modules)
+                    .configs(new ArrayList<>())
+                    .build();
+        }
+        configurationRepository.saveAndFlush(info);
     }
 
     @Override
     public List<IConnectorInfoVo> getConnectorInfos(ClientQueryParam clientQueryParam, PageParam pageParam) {
-//        return configurationRepository.findAll(
-//                Example.of(IConnectorInfo.builder().tenantId(clientParam.getTenantId()).build()), PageRequest.of(pageParam.getPageNumber(), pageParam.getPageSize()))
-//                .stream()
-//                .map(ConfigurationMapper::mapToVo)
-//                .collect(Collectors.toList());
+//        Page<IConnectorInfo> page = configurationRepository.findAll(
+//                PageRequest.of(pageParam.getPageNumber(), pageParam.getPageSize()));
         return null;
     }
 
