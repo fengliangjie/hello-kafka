@@ -9,11 +9,11 @@
 		<version>2.4.1</version>
 		<relativePath />
 	</parent>
-	<groupId>com.deviniti</groupId>
-	<artifactId>SeparateSchemaMultitenancy</artifactId>
+	<groupId>com.siemens</groupId>
+	<artifactId>configuration-service</artifactId>
 	<version>1.0</version>
-	<name>Separate Schema Multitenancy</name>
-	<description>Demo project multi-tenancy separate schema using Spring Boot and Hibernate</description>
+	<name>configuration-service</name>
+	<description>configuration-service</description>
 
 	<properties>
 		<java.version>11</java.version>
