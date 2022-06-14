@@ -8,6 +8,7 @@ import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorConfig;
 import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorInfo;
 import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorModule;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
+import com.deviniti.multitenancy.separate.schema.entity.vo.PageVo;
 import com.deviniti.multitenancy.separate.schema.service.IConnectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class IConnectController {
      * @return
      */
     @GetMapping("/getConnectorInfos")
-    public ResponseEntity<List<IConnectorInfoVo>> getConnectorInfos(@Validated ClientQueryParam clientQueryParam, @Validated PageParam pageParam) {
+    public ResponseEntity<PageVo<IConnectorInfoVo>> getConnectorInfos(@Validated ClientQueryParam clientQueryParam, @Validated PageParam pageParam) {
         return ResponseEntity.ok(connectService.getConnectorInfos(clientQueryParam, pageParam));
     }
 

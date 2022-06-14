@@ -15,6 +15,7 @@ public class ClientUpdateParam {
     private List<Config> configs;
 
     @lombok.Data
-    static class Config {
+    public static class Config {
+        private Long id;
     }
 }

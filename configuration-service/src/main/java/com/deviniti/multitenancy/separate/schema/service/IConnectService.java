@@ -5,6 +5,7 @@ import com.deviniti.multitenancy.separate.schema.entity.param.ClientUpdateParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.IConnectorInfoParam;
 import com.deviniti.multitenancy.separate.schema.entity.param.PageParam;
 import com.deviniti.multitenancy.separate.schema.entity.vo.IConnectorInfoVo;
+import com.deviniti.multitenancy.separate.schema.entity.vo.PageVo;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface IConnectService {
      * @param pageParam
      * @return
      */
-    List<IConnectorInfoVo> getConnectorInfos(ClientQueryParam clientQueryParam, PageParam pageParam);
+    PageVo<IConnectorInfoVo> getConnectorInfos(ClientQueryParam clientQueryParam, PageParam pageParam);
 
     /**
      * update iConnector info

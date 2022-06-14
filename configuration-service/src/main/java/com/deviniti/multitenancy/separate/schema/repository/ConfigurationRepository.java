@@ -1,8 +1,11 @@
 package com.deviniti.multitenancy.separate.schema.repository;
 
 import com.deviniti.multitenancy.separate.schema.entity.po.IConnectorInfo;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * @author: liangjie.feng
@@ -10,4 +13,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ConfigurationRepository extends JpaRepository<IConnectorInfo, Long> {
+    /**
+     * find by connectorId
+     * @param connectorId
+     * @return
+     */
+    default Optional<IConnectorInfo> findByConnectorId(String connectorId) {
+        return this.findOne(Example.of(IConnectorInfo.builder().connectorId(connectorId).build()));
+    }
 }
