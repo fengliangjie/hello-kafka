@@ -1,5 +1,7 @@
 package com.siemens.multitenancy.entity.param;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel("Page")
 public class PageParam {
 
     /**
@@ -27,12 +30,14 @@ public class PageParam {
     /**
      * page number.
      */
+    @ApiModelProperty(value = "Page Number", name = "pageNumber")
     @NotNull(message = "{page.msg.pageNumber.notNull}")
     private int pageNumber;
 
     /**
      * page size.
      */
+    @ApiModelProperty(value = "Page Size", name = "pageSize")
     @NotNull(message = "{page.msg.pageSize.notNull}")
     private int pageSize;
 

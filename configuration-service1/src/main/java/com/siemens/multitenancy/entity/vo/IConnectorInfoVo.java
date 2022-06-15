@@ -2,6 +2,7 @@ package com.siemens.multitenancy.entity.vo;
 
 import com.siemens.multitenancy.entity.po.IConnectorConfig;
 import com.siemens.multitenancy.entity.po.IConnectorModule;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "iConnector info to client")
 public class IConnectorInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
