@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import com.siemens.multitenancy.entity.context.TenantContext;
 
+import static com.siemens.multitenancy.constant.ConstantValues.DEFAULT_TENANT_ID;
+
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
@@ -16,7 +18,7 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
 	@Override
 	public String resolveCurrentTenantIdentifier() {
 		return Optional.ofNullable(TenantContext.getCurrentTenant())
-				.orElse(TenantContext.DEFAULT_TENANT_ID);
+				.orElse(DEFAULT_TENANT_ID);
 	}
 
 	@Override

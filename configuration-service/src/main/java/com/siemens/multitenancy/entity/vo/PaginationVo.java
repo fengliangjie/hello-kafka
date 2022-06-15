@@ -24,21 +24,21 @@ public class PaginationVo {
      * page size.
      */
     @ApiModelProperty("Current page size.")
-    @JsonProperty("page_size")
+    @JsonProperty("pageSize")
     private int pageSize;
 
     /**
      * current page number.
      */
     @ApiModelProperty("Current page number.")
-    @JsonProperty("page_number")
+    @JsonProperty("pageNumber")
     private int pageNumber;
 
     /**
      * total page number.
      */
     @ApiModelProperty("Total page number.")
-    @JsonProperty("page_total")
+    @JsonProperty("pageTotal")
     private int pageTotal;
 
 

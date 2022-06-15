@@ -1,6 +1,5 @@
 package com.siemens.multitenancy.configuration.flyway;
 
-import com.siemens.multitenancy.configuration.hibernate.multitenancy.SchemaMultiTenantConnectionProvider;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.cfg.Environment;
@@ -11,17 +10,14 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.siemens.multitenancy.constant.ConstantValues.*;
+
 @Component
 public class FlywayConfiguration {
 
-	private static final String DB_MIGRATION_TENANTS = "db/migration/all";
-	private static final String DB_MIGRATION_SPECYFIC_FOR_TENANT = "db/migration/%s";
-
 	@PostConstruct
 	Boolean tennantSchemaFlyway() {
-		
-		migrateTennants("siemens_001");
-		migrateTennants("siemens_002");
+		TENANT_IDS.forEach(this::migrateTennants);
 		return true;
 	}
 
@@ -40,7 +36,7 @@ public class FlywayConfiguration {
 		try {
 			
 			Properties properties = new Properties();
-			properties.load(getClass().getResourceAsStream(String.format(SchemaMultiTenantConnectionProvider.HIBERNATE_PROPERTIES_PATH, tenantId)));
+			properties.load(getClass().getResourceAsStream(String.format(HIBERNATE_PROPERTIES_PATH, tenantId)));
 			BasicDataSource dataSource = new BasicDataSource();
 			dataSource.setDriverClassName(properties.get(Environment.DRIVER).toString());
 			dataSource.setUrl(properties.get(Environment.URL).toString());

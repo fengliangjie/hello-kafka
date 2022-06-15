@@ -1,21 +1,20 @@
 package com.siemens.multitenancy.configuration.hibernate.multitenancy;
 
+import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
+import org.hibernate.engine.jdbc.connections.spi.AbstractMultiTenantConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
-import org.hibernate.engine.jdbc.connections.spi.AbstractMultiTenantConnectionProvider;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-
-import com.siemens.multitenancy.entity.context.TenantContext;
+import static com.siemens.multitenancy.constant.ConstantValues.DEFAULT_TENANT_ID;
+import static com.siemens.multitenancy.constant.ConstantValues.HIBERNATE_PROPERTIES_PATH;
 
 @SuppressWarnings("serial")
 public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConnectionProvider {
-	
-	public static final String HIBERNATE_PROPERTIES_PATH = "/hibernate-%s.properties";
 	private final Map<String, ConnectionProvider> connectionProviderMap;
 
 	public SchemaMultiTenantConnectionProvider() {
@@ -24,7 +23,7 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 	
 	@Override
 	protected ConnectionProvider getAnyConnectionProvider() {
-		return getConnectionProvider(TenantContext.DEFAULT_TENANT_ID);
+		return getConnectionProvider(DEFAULT_TENANT_ID);
 	}
 
 	@Override

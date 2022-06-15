@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+import static com.siemens.multitenancy.constant.ConstantValues.X_TENANT_ID;
+
 /**
  * @author: liangjie.feng
  * @date: 2022/5/31 3:25 PM
@@ -19,7 +21,7 @@ public class TenantRequestInterceptor implements AsyncHandlerInterceptor{
 	 @Override
 	 public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		 return Optional.of(request)
-				 .map(req -> req.getHeader("X-TENANT-ID"))
+				 .map(req -> req.getHeader(X_TENANT_ID))
 				 .map(this::setTenantContext)
 				 .orElse(false);
 	}

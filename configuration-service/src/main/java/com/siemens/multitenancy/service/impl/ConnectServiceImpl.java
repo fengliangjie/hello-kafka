@@ -25,6 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
+import static com.siemens.multitenancy.constant.ConstantValues.*;
+
 /**
  * @author: liangjie.feng
  * @date: 2022/5/31 4:12 PM
@@ -68,7 +70,7 @@ public class ConnectServiceImpl implements IConnectService {
             ConfigurationMapper.updateParamMapToPo(info, updateParam);
             return ConfigurationMapper.infoPoMapToVo(info);
         } else {
-            throw new RuntimeException(String.format("can't find connectorId %s in postgres db", updateParam.getConnectorId()));
+            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", updateParam.getConnectorId()));
         }
     }
 
@@ -76,12 +78,12 @@ public class ConnectServiceImpl implements IConnectService {
     public void registerConnector(String connectorId) {
         Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(connectorId);
         if (optional.isEmpty()) {
-            throw new RuntimeException(String.format("can't find connectorId %s in postgres db", connectorId));
+            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
         }
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("tenantId", TenantContext.getCurrentTenant());
-        params.add("connectorId", connectorId);
-        String uri = UriComponentsBuilder.fromUriString("http://localhost:8887/api/v1/iconnector/registration")
+        params.add(TENANT_ID, TenantContext.getCurrentTenant());
+        params.add(CONNECTOR_ID, connectorId);
+        String uri = UriComponentsBuilder.fromUriString(MESSAGE_HANDLER_URL)
                 .queryParams(params)
                 .toUriString();
         restTemplate.postForEntity(uri, JSON.toJSONString(ConfigurationMapper.infoPoMapToMq(optional.get())), String.class);

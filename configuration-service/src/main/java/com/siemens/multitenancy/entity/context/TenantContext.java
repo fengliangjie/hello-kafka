@@ -6,7 +6,6 @@ package com.siemens.multitenancy.entity.context;
  */
 public abstract class TenantContext {
 
-	public static final String DEFAULT_TENANT_ID = "multitenancy_default";
 	private static ThreadLocal<String> currentTenant = new ThreadLocal<String>();
 
     public static void setCurrentTenant(String tenant) {

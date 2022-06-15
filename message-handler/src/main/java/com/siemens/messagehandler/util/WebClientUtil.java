@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -17,6 +17,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
+import reactor.util.retry.Retry;
 
 import java.time.Duration;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
  * @description The WebClient tool class, which can be used for simple get/post requests, supports thread pooling, timeout configuration
  */
 @Data
+@Slf4j
 public class WebClientUtil {
 
     private WebClient webClient;
@@ -186,9 +188,9 @@ public class WebClientUtil {
                 .toEntity(String.class)
                 .doOnError(WebClientRequestException.class, e -> {
                     if (e.getCause() instanceof ReadTimeoutException) {
-                        System.out.println("request timeout");
+                        log.info("request timeout");
                     }
-                });
+                }).retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(3)));
     }
 
     void addHeaders(HttpHeaders httpHeaders, Map<String, String> headers) {
