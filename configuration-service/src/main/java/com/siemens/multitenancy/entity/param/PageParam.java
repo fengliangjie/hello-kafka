@@ -30,16 +30,15 @@ public class PageParam {
     /**
      * page number.
      */
-    @ApiModelProperty(value = "Page Number", name = "page_number")
+    @ApiModelProperty(value = "Page Number", name = "pageNumber")
     @NotNull(message = "{page.msg.pageNumber.notNull}")
     private int pageNumber;
 
     /**
      * page size.
      */
-    @ApiModelProperty(value = "Page Size", name = "page_size")
+    @ApiModelProperty(value = "Page Size", name = "pageSize")
     @NotNull(message = "{page.msg.pageSize.notNull}")
-    // @Range(min = 1, max = PAGE_SIZE_MAX, message = "{page.msg.pageSize.max}")
     private int pageSize;
 
 }

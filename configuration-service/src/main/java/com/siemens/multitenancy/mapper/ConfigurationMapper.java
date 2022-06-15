@@ -139,7 +139,7 @@ public class ConfigurationMapper {
      */
     public static IConnectorConfig configParamMapToPo(ClientUpdateParam.Config configParam) {
         return IConnectorConfig.builder()
-                .id(configParam.getId())
+                .name(configParam.getName())
                 .build();
     }
 

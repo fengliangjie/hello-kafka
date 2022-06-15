@@ -30,4 +30,7 @@ public class IConnectorConfig implements Serializable {
     @GeneratedValue(generator="seq_gen")
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "name")
+    private String name;
 }

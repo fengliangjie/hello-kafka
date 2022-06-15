@@ -17,6 +17,7 @@ ALTER TABLE IF EXISTS public.iconnector_info
 CREATE TABLE IF NOT EXISTS public.iconnector_config
 (
     id bigserial NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default",
     info_id bigint,
     CONSTRAINT iconnector_config_pkey PRIMARY KEY (id),
     CONSTRAINT iconnector_info_config FOREIGN KEY (info_id)

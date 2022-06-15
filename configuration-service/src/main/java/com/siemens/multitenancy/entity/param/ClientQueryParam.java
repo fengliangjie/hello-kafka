@@ -16,6 +16,6 @@ public class ClientQueryParam {
 
     private String name;
 
-    @ApiModelProperty(name = "tenant_id")
+    @ApiModelProperty(name = "tenantId")
     private String tenantId;
 }
