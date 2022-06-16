@@ -4,6 +4,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
+    hostname: zookeeper
     restart: always
     ports:
       - "2181:2181"
@@ -33,7 +34,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
-      KAFKA_SUPER_USERS: User:CN=localhost
+      KAFKA_SUPER_USERS: User:CN=kafka
     depends_on:
       - zookeeper
     volumes:
@@ -48,6 +49,22 @@ services:
     image: message-handler:1.0.0
     ports:
       - "8887:8887"
+    depends_on:
+      - kafka
+    links:
+      - kafka
+    tty: true
+    volumes:
+      - ./ssl:/certs/
+
+  iconnector:
+    build: ./../iconnector/
+    container_name: iconnector
+    hostname: iconnector
+    restart: always
+    image: iconnector:1.0.0
+    ports:
+      - "8888:8888"
     depends_on:
       - kafka
     links:

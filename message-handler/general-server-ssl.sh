@@ -7,7 +7,7 @@ rm -rf general-ssl-jks
 mkdir general-ssl-jks
 cd general-ssl-jks
 
-name=localhost
+name=kafka
 password=123456
 #服务端生成密钥库和证书
 keytool -genkey -keystore kafka.server.keystore.jks -validity 365 -storepass $password -keypass $password -keyalg RSA -dname "CN=$name" -storetype pkcs12

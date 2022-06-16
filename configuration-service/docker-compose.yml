@@ -21,7 +21,6 @@ services:
     ports:
       - "8886:8886"
     depends_on:
-      - kafka
       - postgres
     links:
       - postgres
