@@ -7,7 +7,8 @@ services:
     restart: always
     ports:
       - "2181:2181"
-
+    volumes:
+      - ./zookeeper/data:/data
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -37,6 +38,7 @@ services:
       - zookeeper
     volumes:
       - ./ssl:/etc/kafka/secrets/
+      - ./kafka/data:/kafka
 
 #  message-handler:
 #    build: .
