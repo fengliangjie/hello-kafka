@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author: liangjie.feng
  * @date: 2022/6/16 12:17 PM
  */
-class IConnectControllerTest {
+class IConnectorControllerTest {
 
     @Test
     void connectorInfo() {

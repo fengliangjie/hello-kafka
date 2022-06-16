@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.iconnector_info
     collect_status integer,
     version character varying(255) COLLATE pg_catalog."default",
     date_time bigint,
+    enable boolean,
     CONSTRAINT iconnector_info_pkey PRIMARY KEY (id)
 )
 

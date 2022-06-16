@@ -23,7 +23,6 @@ public class IConnectorRegisterController {
 
     @PostMapping("/registration")
     public void register(String tenantId, String connectorId, @RequestBody String data) {
-        System.out.println("hh");
-        //kafkaProducer.send(String.format(ConstantValus.CONFIG_TOPIC, tenantId, connectorId), data);
+        kafkaProducer.send(String.format(ConstantValus.CONFIG_TOPIC, tenantId, connectorId), data);
     }
 }

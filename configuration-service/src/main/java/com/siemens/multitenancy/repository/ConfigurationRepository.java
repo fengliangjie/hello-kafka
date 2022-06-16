@@ -22,4 +22,11 @@ public interface ConfigurationRepository extends JpaRepository<IConnectorInfo, L
     default Optional<IConnectorInfo> findByConnectorId(String connectorId) {
         return this.findOne(Example.of(IConnectorInfo.builder().connectorId(connectorId).build()));
     }
+
+    /**
+     * delete by connectorId
+     * @param connectorId
+     * @return
+     */
+    long deleteByConnectorId(String connectorId);
 }

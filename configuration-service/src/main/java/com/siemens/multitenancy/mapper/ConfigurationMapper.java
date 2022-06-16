@@ -57,7 +57,7 @@ public class ConfigurationMapper {
                 .connectorId(connectorInfo.getConnectorId())
                 .dateTime(connectorInfo.getDateTime())
                 .data(IConnectorInfoMq.Data.builder()
-                        .status(connectorInfo.getStatus())
+                        .enable(connectorInfo.getEnable())
                         .configs(connectorInfo.getConfigs()).build())
                 .build();
     }

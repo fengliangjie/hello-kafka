@@ -11,7 +11,7 @@ import com.siemens.multitenancy.entity.vo.PageVo;
  * @author: liangjie.feng
  * @date: 2022/5/31 4:00 PM
  */
-public interface IConnectService {
+public interface IConnectorService {
 
     /**
      * save iConnect configuration
@@ -38,6 +38,21 @@ public interface IConnectService {
     /**
      * register iConnector
      * @param connectorId
+     * @param enable
+     * @return
      */
-    void registerConnector(String connectorId);
+    IConnectorInfoVo registerConnector(String connectorId, boolean enable);
+
+    /**
+     * get iConnector info by connectorId
+     * @param connectorId
+     * @return
+     */
+    IConnectorInfoVo getConnectorInfo(String connectorId);
+
+    /**
+     * delete by connectorId
+     * @param connectorId
+     */
+    void deleteConnector(String connectorId);
 }

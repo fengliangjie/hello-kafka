@@ -42,7 +42,7 @@ public class IConnectorInfoMq {
          * 1: Partial abnormal
          * 2: Abnormal
          */
-        private Integer status;
+        private Boolean enable;
 
         /**
          * configs

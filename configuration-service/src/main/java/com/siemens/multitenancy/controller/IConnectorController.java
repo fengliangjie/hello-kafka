@@ -6,7 +6,7 @@ import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
 import com.siemens.multitenancy.entity.param.PageParam;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
-import com.siemens.multitenancy.service.IConnectService;
+import com.siemens.multitenancy.service.IConnectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/iconnector")
 @RequiredArgsConstructor
-public class IConnectController {
+public class IConnectorController {
 
-    private final IConnectService connectService;
+    private final IConnectorService connectService;
 
     /**
      * iConnect info
@@ -61,8 +61,18 @@ public class IConnectController {
      * @return
      */
     @GetMapping("/register")
-    public ResponseEntity<String> registerConnector(String connectorId) {
-        connectService.registerConnector(connectorId);
+    public ResponseEntity<IConnectorInfoVo> registerConnector(String connectorId, boolean enable) {
+        return ResponseEntity.ok(connectService.registerConnector(connectorId, enable));
+    }
+
+    @GetMapping("/getConnectorInfo")
+    public ResponseEntity<IConnectorInfoVo> getConnectorInfo(String connectorId) {
+        return ResponseEntity.ok(connectService.getConnectorInfo(connectorId));
+    }
+
+    @DeleteMapping("/deleteConnector")
+    public ResponseEntity<String> deleteConnector(String connectorId) {
+        connectService.deleteConnector(connectorId);
         return ResponseEntity.ok().build();
     }
 }

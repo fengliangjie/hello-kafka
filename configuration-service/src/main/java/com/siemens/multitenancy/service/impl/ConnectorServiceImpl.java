@@ -11,7 +11,7 @@ import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
 import com.siemens.multitenancy.mapper.ConfigurationMapper;
 import com.siemens.multitenancy.repository.ConfigurationRepository;
-import com.siemens.multitenancy.service.IConnectService;
+import com.siemens.multitenancy.service.IConnectorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,7 @@ import static com.siemens.multitenancy.constant.ConstantValues.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ConnectServiceImpl implements IConnectService {
+public class ConnectorServiceImpl implements IConnectorService {
     private final ConfigurationRepository configurationRepository;
 
     private final RestTemplate restTemplate;
@@ -75,17 +75,37 @@ public class ConnectServiceImpl implements IConnectService {
     }
 
     @Override
-    public void registerConnector(String connectorId) {
+    public IConnectorInfoVo registerConnector(String connectorId, boolean enable) {
         Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(connectorId);
         if (optional.isEmpty()) {
             throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
         }
+        // update enable status
+        IConnectorInfo connectorInfo = optional.get();
+        connectorInfo.setEnable(enable);
+        // send iConnector info to message-handle
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add(TENANT_ID, TenantContext.getCurrentTenant());
         params.add(CONNECTOR_ID, connectorId);
         String uri = UriComponentsBuilder.fromUriString(MESSAGE_HANDLER_URL)
                 .queryParams(params)
                 .toUriString();
-        restTemplate.postForEntity(uri, JSON.toJSONString(ConfigurationMapper.infoPoMapToMq(optional.get())), String.class);
+        restTemplate.postForEntity(uri, JSON.toJSONString(ConfigurationMapper.infoPoMapToMq(connectorInfo)), String.class);
+        return ConfigurationMapper.infoPoMapToVo(connectorInfo);
+    }
+
+    @Override
+    public IConnectorInfoVo getConnectorInfo(String connectorId) {
+        Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(connectorId);
+        if (optional.isPresent()) {
+            return ConfigurationMapper.infoPoMapToVo(optional.get());
+        } else {
+            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
+        }
+    }
+
+    @Override
+    public void deleteConnector(String connectorId) {
+        configurationRepository.deleteByConnectorId(connectorId);
     }
 }
