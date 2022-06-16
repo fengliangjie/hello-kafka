@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.iconnector_info
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.iconnector_info
-    OWNER to postgres;
+    OWNER to sigreen;
 
 CREATE TABLE IF NOT EXISTS public.iconnector_config
 (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.iconnector_config
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.iconnector_config
-    OWNER to postgres;
+    OWNER to sigreen;
 
 CREATE TABLE IF NOT EXISTS public.iconnector_module
 (
@@ -49,4 +49,4 @@ CREATE TABLE IF NOT EXISTS public.iconnector_module
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.iconnector_module
-    OWNER to postgres;
+    OWNER to sigreen;

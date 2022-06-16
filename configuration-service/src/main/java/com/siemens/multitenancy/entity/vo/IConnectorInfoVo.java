@@ -63,6 +63,11 @@ public class IConnectorInfoVo implements Serializable {
     private LocalDateTime dateTime;
 
     /**
+     * Whether data collection is allowed
+     */
+    private Boolean enable;
+
+    /**
      * modules
      */
     private List<IConnectorModule> modules;

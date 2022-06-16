@@ -41,6 +41,7 @@ public class ConfigurationMapper {
                 .collectStatus(connectorInfo.getCollectStatus())
                 .version(connectorInfo.getVersion())
                 .dateTime(localDateTime)
+                .enable(connectorInfo.getEnable())
                 .modules(connectorInfo.getModules())
                 .configs(connectorInfo.getConfigs())
                 .build();
