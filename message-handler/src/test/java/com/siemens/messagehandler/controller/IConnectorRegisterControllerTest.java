@@ -1,5 +1,6 @@
 package com.siemens.messagehandler.controller;
 
+import com.siemens.messagehandler.constant.ConstantValus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,5 +13,6 @@ class IConnectorRegisterControllerTest {
 
     @Test
     void register() {
+        System.out.println(String.format(ConstantValus.CONFIG_TOPIC, "siemens_001", "conId_001"));
     }
 }

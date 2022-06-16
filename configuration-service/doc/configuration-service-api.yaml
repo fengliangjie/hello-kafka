@@ -3,7 +3,7 @@ info:
   title: Configuration service
   version: v0
 servers:
-  - url: ''
+  - url: 'https://sigreen.siemens.cloud.cn/configuration'
 paths:
   /api/v1/iconnector/updateConnectorInfo:
     put:
@@ -88,13 +88,19 @@ paths:
           required: true
           schema:
             type: string
+        - name: enable
+          in: query
+          description: 'Whether data collection is allowed.'
+          required: true
+          schema:
+            type: boolean
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                type: string
+                $ref: '#/components/schemas/IConnectorInfoVo'
         default:
           description: 'Unexpected error'
           content:
@@ -133,6 +139,70 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/IConnectorInfoVo'
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/iconnector/getConnectorInfo:
+    get:
+      summary: '101: Get iConnector info by connectorId'
+      tags:
+        - i-connect-controller
+      operationId: getConnectorInfo
+      parameters:
+        - name: X-TENANT-ID
+          in: header
+          description: 'The tenant ID.'
+          required: true
+          schema:
+            type: string
+        - name: connectorId
+          in: query
+          description: 'The iConnector ID.'
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IConnectorInfoVo'
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/iconnector/deleteConnector:
+    get:
+      summary: '101: delete iConnector by connectorId'
+      tags:
+        - i-connect-controller
+      operationId: deleteConnector
+      parameters:
+        - name: X-TENANT-ID
+          in: header
+          description: 'The tenant ID.'
+          required: true
+          schema:
+            type: string
+        - name: connectorId
+          in: query
+          description: 'The iConnector ID.'
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
         default:
           description: 'Unexpected error'
           content:
