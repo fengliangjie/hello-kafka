@@ -10,6 +10,9 @@ services:
       - "2181:2181"
     volumes:
       - ./zookeeper/data:/data
+    networks:
+      - sigreen
+
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -40,6 +43,8 @@ services:
     volumes:
       - ./ssl:/etc/kafka/secrets/
       - ./kafka/data:/kafka
+    networks:
+      - sigreen
 
   message-handler:
     build: .
@@ -56,6 +61,8 @@ services:
     tty: true
     volumes:
       - ./ssl:/certs/
+    networks:
+      - sigreen
 
   iconnector:
     build: ./../iconnector/
@@ -72,3 +79,38 @@ services:
     tty: true
     volumes:
       - ./ssl:/certs/
+    networks:
+      - sigreen
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sigreen
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    networks:
+      - sigreen
+
+  configuration-service:
+    build: ./../configuration-service/
+    container_name: configuration-service
+    hostname: configuration-service
+    restart: always
+    image: configuration-service:1.0.0
+    ports:
+      - "8886:8886"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    tty: true
+    networks:
+      - sigreen
+
+networks:
+  sigreen:
+    driver: bridge
