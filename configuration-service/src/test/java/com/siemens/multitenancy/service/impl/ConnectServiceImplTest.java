@@ -1,4 +1,4 @@
-package com.siemens.multitenancy.controller;
+package com.siemens.multitenancy.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.siemens.multitenancy.entity.po.IConnectorConfig;
@@ -11,25 +11,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author: liangjie.feng
- * @date: 2022/6/16 12:17 PM
+ * @date: 2022/6/16 11:01 AM
  */
-class IConnectControllerTest {
+class ConnectServiceImplTest {
 
     @Test
-    void connectorInfo() {
-        System.out.println(JSON.toJSONString(ResponseEntity.ok().build()));
+    void info() {
+        IConnectorInfo iConnectorInfo = IConnectorInfo.builder()
+                .id(1L).connectorId("0001")
+                .status(0)
+                .collectStatus(0)
+                .dateTime(1655348631L)
+                .version("v0.0.1")
+                .modules(Collections.singletonList(IConnectorModule.builder().id(1L).status(0).name("module").version("v0.0.1").build()))
+                .configs(Collections.singletonList(IConnectorConfig.builder().id(1L).name("config").build()))
+                .build();
+        IConnectorInfoVo iConnectorInfoVo = ConfigurationMapper.infoPoMapToVo(iConnectorInfo);
+        System.out.println(JSON.toJSONString(iConnectorInfoVo));
     }
 
     @Test
@@ -179,26 +185,14 @@ class IConnectControllerTest {
             }
         };
         PageVo<IConnectorInfoVo> pageVo = ConfigurationMapper.convert2VoPage(page, ConfigurationMapper::infoPoMapToVo);
-        System.out.println(JSON.toJSONString(ResponseEntity.ok(pageVo)));
+        System.out.println(JSON.toJSONString(pageVo));
     }
 
     @Test
     void updateConnectorInfo() {
-        IConnectorInfo iConnectorInfo = IConnectorInfo.builder()
-                .id(1L).connectorId("0001")
-                .status(0)
-                .collectStatus(0)
-                .dateTime(1655348631L)
-                .version("v0.0.1")
-                .modules(Collections.singletonList(IConnectorModule.builder().id(1L).status(0).name("module").version("v0.0.1").build()))
-                .configs(Collections.singletonList(IConnectorConfig.builder().id(1L).name("config").build()))
-                .build();
-        IConnectorInfoVo iConnectorInfoVo = ConfigurationMapper.infoPoMapToVo(iConnectorInfo);
-        System.out.println(JSON.toJSONString(ResponseEntity.ok(iConnectorInfoVo)));
     }
 
     @Test
     void registerConnector() {
-        System.out.println(JSON.toJSONString(ResponseEntity.ok().build()));
     }
 }

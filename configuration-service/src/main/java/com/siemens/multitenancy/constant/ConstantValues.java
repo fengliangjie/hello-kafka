@@ -26,5 +26,5 @@ public final class ConstantValues {
 
     public static final String DB_MIGRATION_SPECYFIC_FOR_TENANT = "db/migration/%s";
 
-    public static final String DEFAULT_TENANT_ID = "multitenancy_default";
+    public static final String DEFAULT_TENANT_ID = "siemens_001";
 }
