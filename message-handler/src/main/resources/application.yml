@@ -4,13 +4,13 @@ server:
 kafka:
   ssl:
     location:
-      truststore: /Users/hakurei/Projects/hello-kafka/message-handler/src/main/resources/kafka.server.truststore.jks
-      keystore: /Users/hakurei/Projects/hello-kafka/message-handler/src/main/resources/kafka.server.keystore.jks
+      truststore: /certs/kafka.server.truststore.jks
+      keystore: /certs/kafka.server.keystore.jks
     password: 123456
 
 spring:
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: kafka:9093
     security:
       protocol: "ssl"
     ssl:

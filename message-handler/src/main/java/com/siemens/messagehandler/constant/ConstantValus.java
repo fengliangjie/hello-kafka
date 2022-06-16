@@ -31,7 +31,7 @@ public final class ConstantValus {
 
     public static final String GROUP_INFO = "group-info";
 
-    public static final String CONFIGURATION_SERVICE_INFO_URL = "http://localhost:8886/api/v1/iconnector/info";
+    public static final String CONFIGURATION_SERVICE_INFO_URL = "http://configuration-service:8886/api/v1/iconnector/info";
 
     public static final String PCF_SERVICE_DATA_URL = "http://";
 

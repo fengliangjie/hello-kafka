@@ -12,15 +12,15 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
-    hostname: localhost
+    hostname: kafka
     ports:
       - "9093:9093"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      KAFKA_LISTENERS: SSL://:9093
-      KAFKA_ADVERTISED_LISTENERS: SSL://:9093
+      KAFKA_LISTENERS: SSL://kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: SSL://kafka:9093
       KAFKA_SSL_CLIENT_AUTH: required
       KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/kafka.server.keystore.jks
       KAFKA_SSL_KEYSTORE_PASSWORD: 123456
@@ -40,17 +40,18 @@ services:
       - ./ssl:/etc/kafka/secrets/
       - ./kafka/data:/kafka
 
-#  message-handler:
-#    build: .
-#    container_name: message-handler
-#    restart: always
-#    image: message-handler:1.0.0
-#    ports:
-#      - "8887:8887"
-#    depends_on:
-#      - kafka
-#    links:
-#      - kafka
-#    tty: true
-#    volumes:
-#      - ./ssl:/certs/
+  message-handler:
+    build: .
+    container_name: message-handler
+    hostname: message-handler
+    restart: always
+    image: message-handler:1.0.0
+    ports:
+      - "8887:8887"
+    depends_on:
+      - kafka
+    links:
+      - kafka
+    tty: true
+    volumes:
+      - ./ssl:/certs/

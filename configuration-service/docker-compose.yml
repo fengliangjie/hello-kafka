@@ -12,19 +12,17 @@ services:
     ports:
       - "5432:5432"
 
-#  multi-tenancy:
-#    build: .
-#    container_name: multi-tenancy
-#    restart: always
-#    image: multi-tenancy:1.0
-#    ports:
-#      - "8886:8886"
-#    depends_on:
-#      - kafka
-#      - postgres
-#    links:
-#      - kafka
-#      - postgres
-#    tty: true
-#    volumes:
-#      - ./ssl:/certs/
+  configuration-service:
+    build: .
+    container_name: configuration-service
+    hostname: configuration-service
+    restart: always
+    image: configuration-service:1.0.0
+    ports:
+      - "8886:8886"
+    depends_on:
+      - kafka
+      - postgres
+    links:
+      - postgres
+    tty: true

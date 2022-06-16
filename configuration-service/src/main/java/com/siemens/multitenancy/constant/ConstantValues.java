@@ -16,7 +16,7 @@ public final class ConstantValues {
 
     public static final String CONNECTOR_ID = "connectorId";
 
-    public static final String MESSAGE_HANDLER_URL = "http://localhost:8887/api/v1/iconnector/registration";
+    public static final String MESSAGE_HANDLER_URL = "http://message-handler:8887/api/v1/iconnector/registration";
 
     public static final String X_TENANT_ID = "X-TENANT-ID";
 
