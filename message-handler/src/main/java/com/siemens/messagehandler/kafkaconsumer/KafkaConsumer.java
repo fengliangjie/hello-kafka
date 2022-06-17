@@ -42,13 +42,11 @@ public class KafkaConsumer {
             return;
         }
 
-        JSONObject value = JSON.parseObject(consumerRecord.value());
-
         // headers
         Map<String, String> headers = new HashMap<>(16);
         headers.put(X_TENANT_ID, tenantId);
 
-        Mono<ResponseEntity<String>> mono = webClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, value);
+        Mono<ResponseEntity<String>> mono = webClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, JSON.parseObject(consumerRecord.value()));
         mono.subscribe();
     }
 
