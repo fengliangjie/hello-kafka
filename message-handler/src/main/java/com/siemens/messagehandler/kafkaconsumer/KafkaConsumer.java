@@ -96,7 +96,7 @@ public class KafkaConsumer {
 
     public boolean judgeTenantId(String tenantId) {
         if (!StringUtils.hasText(tenantId)) {
-            log.error("Get tenantId from topic: {} failed!", tenantId);
+            log.error("Get tenantId failed!");
             return false;
         }
         return true;
