@@ -36,23 +36,17 @@ public class KafkaConsumer {
      */
     @KafkaListener(topicPattern = TOPIC_PATTERN_DATA, groupId = GROUP_DATA)
     public void kafkaListener(ConsumerRecord<String, String> consumerRecord) {
-        if (!judgeConsumerRecord(consumerRecord)) {
-            return;
-        }
-
         // tenantId
-        String tenantId = getTenantId(consumerRecord.topic());
-        if (!judgeTenantId(tenantId)) {
+        String tenantId = getTenantId(consumerRecord);
+        if (!StringUtils.hasText(tenantId)) {
             return;
         }
-
-        JSONObject value = JSON.parseObject(consumerRecord.value());
 
         // headers
         Map<String, String> headers = new HashMap<>(16);
         headers.put(X_TENANT_ID, tenantId);
 
-        Mono<ResponseEntity<String>> mono = webClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, value);
+        Mono<ResponseEntity<String>> mono = webClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, JSON.parseObject(consumerRecord.value()));
         mono.subscribe();
     }
 
@@ -63,13 +57,9 @@ public class KafkaConsumer {
      */
     @KafkaListener(topicPattern = TOPIC_PATTERN_INFO, groupId = GROUP_INFO)
     public void iConnectRegistrationListener(ConsumerRecord<String, String> consumerRecord) {
-        if (!judgeConsumerRecord(consumerRecord)) {
-            return;
-        }
-
         // tenantId
-        String tenantId = getTenantId(consumerRecord.topic());
-        if (!judgeTenantId(tenantId)) {
+        String tenantId = getTenantId(consumerRecord);
+        if (!StringUtils.hasText(tenantId)) {
             return;
         }
 
@@ -86,27 +76,20 @@ public class KafkaConsumer {
         mono.subscribe();
     }
 
-    public boolean judgeConsumerRecord(ConsumerRecord<String, String> consumerRecord) {
+    public String getTenantId(ConsumerRecord<String, String> consumerRecord) {
         if (consumerRecord == null || !StringUtils.hasText(consumerRecord.value())) {
             log.error("ConsumerRecord is empty!");
-            return false;
+            return null;
         }
-        return true;
-    }
-
-    public boolean judgeTenantId(String tenantId) {
-        if (!StringUtils.hasText(tenantId)) {
-            log.error("Get tenantId from topic: {} failed!", tenantId);
-            return false;
-        }
-        return true;
-    }
-
-    private String getTenantId(String topic) {
-        String[] topicArr = topic.split(POINT_TRANSLATE);
+        String[] topicArr = consumerRecord.topic().split(POINT_TRANSLATE);
         String tenantIdAndConnectorId = topicArr[topicArr.length - 1];
         String[] tenantIdAndConnectorIdArr = tenantIdAndConnectorId.split(DASH);
-        return tenantIdAndConnectorIdArr[0];
+        String tenantId = tenantIdAndConnectorIdArr[0];
+        if (!StringUtils.hasText(tenantId)) {
+            log.error("Get tenantId failed!");
+            return null;
+        }
+        return tenantId;
     }
 
     private void createAcl(String tenantId, JSONObject value) {
