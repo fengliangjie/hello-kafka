@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaConsumer {
 
-    @KafkaListener(topics = "iconnector-config.siemens_001-conId-001", groupId = "group-test")
+    @KafkaListener(topics = "iconnector-config.siemens_001-conId_001", groupId = "group-config")
     public void kafkaListener(ConsumerRecord<String, String> consumerRecord) {
         JSONObject value = JSON.parseObject(consumerRecord.value());
 
