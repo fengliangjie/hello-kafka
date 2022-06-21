@@ -38,7 +38,4 @@ public final class ConstantValus {
     public static final String DASH = "-";
 
     public static final String POINT_TRANSLATE = "\\.";
-
-    public static final String TENANT_ID = "tenantId";
-
 }
