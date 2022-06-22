@@ -34,7 +34,7 @@ public class IConnectorModule implements Serializable {
     /**
      * Name
      */
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     /**
