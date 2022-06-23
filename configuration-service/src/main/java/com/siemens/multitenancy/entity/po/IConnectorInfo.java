@@ -71,6 +71,9 @@ public class IConnectorInfo implements Serializable {
     @Column(name = "date_time")
     private Long dateTime;
 
+    /**
+     * Whether data collection is allowed
+     */
     @Column(name = "enable")
     private Boolean enable;
 

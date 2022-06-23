@@ -36,11 +36,7 @@ public class IConnectorInfoMq {
     @lombok.Data
     public static class Data {
         /**
-         * Status
-         *
-         * 0: Normal
-         * 1: Partial abnormal
-         * 2: Abnormal
+         * Whether data collection is allowed
          */
         private Boolean enable;
 
