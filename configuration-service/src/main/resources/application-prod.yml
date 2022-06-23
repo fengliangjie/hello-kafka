@@ -3,7 +3,7 @@ server:
 
 hibernate:
   connection:
-    url: jdbc:postgresql://localhost:5432/multitenancy_default
+    url: jdbc:postgresql://localhost:5432/default?currentSchema=config
     username: sigreen
     password: 123456
 
