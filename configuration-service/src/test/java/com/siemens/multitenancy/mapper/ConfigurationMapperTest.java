@@ -1,7 +1,7 @@
 package com.siemens.multitenancy.mapper;
 
 import com.alibaba.fastjson.JSON;
-import com.siemens.multitenancy.entity.param.ClientUpdateParam;
+import com.siemens.multitenancy.entity.param.IConnectorConfigParam;
 import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
 import com.siemens.multitenancy.entity.po.IConnectorConfig;
 import com.siemens.multitenancy.entity.po.IConnectorInfo;
@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author: liangjie.feng
@@ -97,7 +95,7 @@ class ConfigurationMapperTest {
 
     @Test
     void configParamMapToPo() {
-        ClientUpdateParam.Config config = new ClientUpdateParam.Config();
+        IConnectorConfigParam config = new IConnectorConfigParam();
         config.setName("config");
         IConnectorConfig connectorConfig = ConfigurationMapper.configParamMapToPo(config);
         System.out.println(JSON.toJSONString(connectorConfig));

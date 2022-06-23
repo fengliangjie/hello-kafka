@@ -18,12 +18,56 @@ paths:
           required: true
           schema:
             type: string
+        - name: connectorId
+          in: query
+          description: 'The connectorId.'
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ClientUpdateParam'
         required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IConnectorInfoVo'
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/iconnector/uploadConnectorInfo:
+    post:
+      summary: '101: Return the iConnector info which upload'
+      tags:
+        - i-connect-controller
+      operationId: uploadConnectorInfo
+      parameters:
+        - name: X-TENANT-ID
+          in: header
+          description: 'The tenant ID.'
+          required: true
+          schema:
+            type: string
+        - name: connectorId
+          in: query
+          description: 'The connectorId.'
+          required: true
+          schema:
+            type: string
+        - name: file
+          in: query
+          description: 'The file to upload'
+          required: true
+          schema:
+            type: object
       responses:
         "200":
           description: OK
@@ -214,9 +258,6 @@ components:
     ClientUpdateParam:
       type: object
       properties:
-        connectorId:
-          type: string
-          description: 'The iConnector ID.'
         configs:
           type: array
           description: 'The iConnector configs'

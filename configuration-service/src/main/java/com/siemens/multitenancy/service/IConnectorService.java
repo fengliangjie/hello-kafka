@@ -4,6 +4,8 @@ import com.siemens.multitenancy.entity.param.*;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
 
+import java.util.List;
+
 /**
  * @author: liangjie.feng
  * @date: 2022/5/31 4:00 PM
@@ -27,10 +29,11 @@ public interface IConnectorService {
 
     /**
      * update iConnector info
-     * @param clientUpdateParam
+     * @param connectorId
+     * @param configParamList
      * @return
      */
-    IConnectorInfoVo updateConnectorInfo(ClientUpdateParam clientUpdateParam);
+    IConnectorInfoVo updateConnectorInfo(String connectorId, List<IConnectorConfigParam> configParamList);
 
     /**
      * upload iConnector info

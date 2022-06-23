@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.siemens.multitenancy.constant.ConstantValues.*;
@@ -60,14 +61,14 @@ public class ConnectorServiceImpl implements IConnectorService {
     }
 
     @Override
-    public IConnectorInfoVo updateConnectorInfo(ClientUpdateParam updateParam) {
-        Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(updateParam.getConnectorId());
+    public IConnectorInfoVo updateConnectorInfo(String connectorId, List<IConnectorConfigParam> configParamList) {
+        Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(connectorId);
         if (optional.isPresent()) {
             IConnectorInfo info = optional.get();
-            ConfigurationMapper.updateParamMapToPo(info, updateParam);
+            ConfigurationMapper.updateParamMapToPo(info, configParamList);
             return ConfigurationMapper.infoPoMapToVo(info);
         } else {
-            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", updateParam.getConnectorId()));
+            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
         }
     }
 

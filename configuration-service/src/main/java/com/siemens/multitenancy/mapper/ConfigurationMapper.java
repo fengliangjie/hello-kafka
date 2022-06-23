@@ -2,8 +2,8 @@ package com.siemens.multitenancy.mapper;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.siemens.multitenancy.entity.param.ClientUpdateParam;
 import com.siemens.multitenancy.entity.param.ClientUploadParam;
+import com.siemens.multitenancy.entity.param.IConnectorConfigParam;
 import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
 import com.siemens.multitenancy.entity.po.IConnectorConfig;
 import com.siemens.multitenancy.entity.po.IConnectorInfo;
@@ -128,10 +128,10 @@ public class ConfigurationMapper {
      * ClientUpdateParam -> IConnectorInfo
      *
      * @param info
-     * @param updateParam
+     * @param configParamList
      */
-    public static void updateParamMapToPo(IConnectorInfo info, ClientUpdateParam updateParam) {
-        List<IConnectorConfig> configs = updateParam.getConfigs().stream().map(ConfigurationMapper::configParamMapToPo).collect(Collectors.toList());
+    public static void updateParamMapToPo(IConnectorInfo info, List<IConnectorConfigParam> configParamList) {
+        List<IConnectorConfig> configs = configParamList.stream().map(ConfigurationMapper::configParamMapToPo).collect(Collectors.toList());
         info.getConfigs().clear();
         info.getConfigs().addAll(configs);
     }
@@ -140,10 +140,8 @@ public class ConfigurationMapper {
         try {
             String config = new String(uploadParam.getFile().getBytes(), StandardCharsets.UTF_8);
             JSONObject jsonObject = JSON.parseObject(config);
-            List<ClientUpdateParam.Config> paramConfigs = JSON.parseArray(jsonObject.getString("configs"), ClientUpdateParam.Config.class);
-            List<IConnectorConfig> configs = paramConfigs.stream().map(ConfigurationMapper::configParamMapToPo).collect(Collectors.toList());
-            info.getConfigs().clear();
-            info.getConfigs().addAll(configs);
+            List<IConnectorConfigParam> configParamList = JSON.parseArray(jsonObject.getString("configs"), IConnectorConfigParam.class);
+            updateParamMapToPo(info, configParamList);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("conversion file failed! Please check file form");
@@ -156,7 +154,7 @@ public class ConfigurationMapper {
      * @param configParam
      * @return
      */
-    public static IConnectorConfig configParamMapToPo(ClientUpdateParam.Config configParam) {
+    public static IConnectorConfig configParamMapToPo(IConnectorConfigParam configParam) {
         return IConnectorConfig.builder()
                 .name(configParam.getName())
                 .build();

@@ -26,6 +26,7 @@ public class IConnectorController {
 
     /**
      * iConnect info
+     *
      * @param param
      * @return
      */
@@ -37,6 +38,7 @@ public class IConnectorController {
 
     /**
      * get iConnector infos
+     *
      * @param clientQueryParam
      * @param pageParam
      * @return
@@ -48,14 +50,22 @@ public class IConnectorController {
 
     /**
      * update iConnector info
+     *
+     * @param connectorId
      * @param clientUpdateParam
      * @return
      */
     @PutMapping("/updateConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@Validated @RequestBody ClientUpdateParam clientUpdateParam) {
-        return ResponseEntity.ok(connectService.updateConnectorInfo(clientUpdateParam));
+    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId, @Validated @RequestBody ClientUpdateParam clientUpdateParam) {
+        return ResponseEntity.ok(connectService.updateConnectorInfo(connectorId, clientUpdateParam.getConfigs()));
     }
 
+    /**
+     * upload iConnector info
+     *
+     * @param clientUploadParam
+     * @return
+     */
     @PostMapping("/uploadConnectorInfo")
     public ResponseEntity<IConnectorInfoVo> uploadConnectorInfo(@Validated ClientUploadParam clientUploadParam) {
         return ResponseEntity.ok(connectService.uploadConnectorInfo(clientUploadParam));
@@ -63,6 +73,7 @@ public class IConnectorController {
 
     /**
      * register iConnector
+     *
      * @param connectorId
      * @return
      */
@@ -71,11 +82,23 @@ public class IConnectorController {
         return ResponseEntity.ok(connectService.registerConnector(connectorId, enable));
     }
 
+    /**
+     * get iConnector info
+     *
+     * @param connectorId
+     * @return
+     */
     @GetMapping("/getConnectorInfo")
     public ResponseEntity<IConnectorInfoVo> getConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId) {
         return ResponseEntity.ok(connectService.getConnectorInfo(connectorId));
     }
 
+    /**
+     * delete iConnector info
+     *
+     * @param connectorId
+     * @return
+     */
     @DeleteMapping("/deleteConnector")
     public ResponseEntity<String> deleteConnector(@NotBlank(message = "connectorId can't be blank") String connectorId) {
         connectService.deleteConnector(connectorId);
