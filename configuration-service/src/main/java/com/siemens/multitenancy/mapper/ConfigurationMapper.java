@@ -1,6 +1,9 @@
 package com.siemens.multitenancy.mapper;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.siemens.multitenancy.entity.param.ClientUpdateParam;
+import com.siemens.multitenancy.entity.param.ClientUploadParam;
 import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
 import com.siemens.multitenancy.entity.po.IConnectorConfig;
 import com.siemens.multitenancy.entity.po.IConnectorInfo;
@@ -12,6 +15,7 @@ import com.siemens.multitenancy.entity.vo.PaginationVo;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -130,6 +134,20 @@ public class ConfigurationMapper {
         List<IConnectorConfig> configs = updateParam.getConfigs().stream().map(ConfigurationMapper::configParamMapToPo).collect(Collectors.toList());
         info.getConfigs().clear();
         info.getConfigs().addAll(configs);
+    }
+
+    public static void uploadParamMapToPo(IConnectorInfo info, ClientUploadParam uploadParam) {
+        try {
+            String config = new String(uploadParam.getFile().getBytes(), StandardCharsets.UTF_8);
+            JSONObject jsonObject = JSON.parseObject(config);
+            List<ClientUpdateParam.Config> paramConfigs = JSON.parseArray(jsonObject.getString("configs"), ClientUpdateParam.Config.class);
+            List<IConnectorConfig> configs = paramConfigs.stream().map(ConfigurationMapper::configParamMapToPo).collect(Collectors.toList());
+            info.getConfigs().clear();
+            info.getConfigs().addAll(configs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("conversion file failed! Please check file form");
+        }
     }
 
     /**

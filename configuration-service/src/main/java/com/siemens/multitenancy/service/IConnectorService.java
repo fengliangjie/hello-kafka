@@ -1,9 +1,6 @@
 package com.siemens.multitenancy.service;
 
-import com.siemens.multitenancy.entity.param.ClientQueryParam;
-import com.siemens.multitenancy.entity.param.ClientUpdateParam;
-import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
-import com.siemens.multitenancy.entity.param.PageParam;
+import com.siemens.multitenancy.entity.param.*;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
 
@@ -34,6 +31,13 @@ public interface IConnectorService {
      * @return
      */
     IConnectorInfoVo updateConnectorInfo(ClientUpdateParam clientUpdateParam);
+
+    /**
+     * upload iConnector info
+     * @param clientUploadParam
+     * @return
+     */
+    IConnectorInfoVo uploadConnectorInfo(ClientUploadParam clientUploadParam);
 
     /**
      * register iConnector

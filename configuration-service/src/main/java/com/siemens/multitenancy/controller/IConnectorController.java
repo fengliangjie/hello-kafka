@@ -1,9 +1,6 @@
 package com.siemens.multitenancy.controller;
 
-import com.siemens.multitenancy.entity.param.ClientQueryParam;
-import com.siemens.multitenancy.entity.param.ClientUpdateParam;
-import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
-import com.siemens.multitenancy.entity.param.PageParam;
+import com.siemens.multitenancy.entity.param.*;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
 import com.siemens.multitenancy.service.IConnectorService;
@@ -53,6 +50,11 @@ public class IConnectorController {
     @PutMapping("/updateConnectorInfo")
     public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@RequestBody ClientUpdateParam clientUpdateParam) {
         return ResponseEntity.ok(connectService.updateConnectorInfo(clientUpdateParam));
+    }
+
+    @PostMapping("/uploadConnectorInfo")
+    public ResponseEntity<IConnectorInfoVo> uploadConnectorInfo(ClientUploadParam clientUploadParam) {
+        return ResponseEntity.ok(connectService.uploadConnectorInfo(clientUploadParam));
     }
 
     /**

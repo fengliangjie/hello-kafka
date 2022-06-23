@@ -2,10 +2,7 @@ package com.siemens.multitenancy.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.siemens.multitenancy.entity.context.TenantContext;
-import com.siemens.multitenancy.entity.param.ClientQueryParam;
-import com.siemens.multitenancy.entity.param.ClientUpdateParam;
-import com.siemens.multitenancy.entity.param.IConnectorInfoParam;
-import com.siemens.multitenancy.entity.param.PageParam;
+import com.siemens.multitenancy.entity.param.*;
 import com.siemens.multitenancy.entity.po.IConnectorInfo;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
@@ -72,6 +69,17 @@ public class ConnectorServiceImpl implements IConnectorService {
         } else {
             throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", updateParam.getConnectorId()));
         }
+    }
+
+    @Override
+    public IConnectorInfoVo uploadConnectorInfo(ClientUploadParam uploadParam) {
+        Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(uploadParam.getConnectorId());
+        if (optional.isEmpty()) {
+            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", uploadParam.getConnectorId()));
+        }
+        IConnectorInfo info = optional.get();
+        ConfigurationMapper.uploadParamMapToPo(info, uploadParam);
+        return ConfigurationMapper.infoPoMapToVo(info);
     }
 
     @Override
