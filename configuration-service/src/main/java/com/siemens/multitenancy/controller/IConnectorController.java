@@ -9,10 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author: liangjie.feng
  * @Date: 2022/05/31 3:01 PM
  */
+@Validated
 @RestController
 @RequestMapping("/api/v1/iconnector")
 @RequiredArgsConstructor
@@ -26,7 +30,7 @@ public class IConnectorController {
      * @return
      */
     @PostMapping("/info")
-    public ResponseEntity<String> connectorInfo(@RequestBody IConnectorInfoParam param) {
+    public ResponseEntity<String> connectorInfo(@Validated @RequestBody IConnectorInfoParam param) {
         connectService.info(param);
         return ResponseEntity.ok().build();
     }
@@ -48,12 +52,12 @@ public class IConnectorController {
      * @return
      */
     @PutMapping("/updateConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@RequestBody ClientUpdateParam clientUpdateParam) {
+    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@Validated @RequestBody ClientUpdateParam clientUpdateParam) {
         return ResponseEntity.ok(connectService.updateConnectorInfo(clientUpdateParam));
     }
 
     @PostMapping("/uploadConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> uploadConnectorInfo(ClientUploadParam clientUploadParam) {
+    public ResponseEntity<IConnectorInfoVo> uploadConnectorInfo(@Validated ClientUploadParam clientUploadParam) {
         return ResponseEntity.ok(connectService.uploadConnectorInfo(clientUploadParam));
     }
 
@@ -63,17 +67,17 @@ public class IConnectorController {
      * @return
      */
     @GetMapping("/register")
-    public ResponseEntity<IConnectorInfoVo> registerConnector(String connectorId, boolean enable) {
+    public ResponseEntity<IConnectorInfoVo> registerConnector(@NotBlank(message = "connectorId can't be blank") String connectorId, @NotNull(message = "enable can't be null") boolean enable) {
         return ResponseEntity.ok(connectService.registerConnector(connectorId, enable));
     }
 
     @GetMapping("/getConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> getConnectorInfo(String connectorId) {
+    public ResponseEntity<IConnectorInfoVo> getConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId) {
         return ResponseEntity.ok(connectService.getConnectorInfo(connectorId));
     }
 
     @DeleteMapping("/deleteConnector")
-    public ResponseEntity<String> deleteConnector(String connectorId) {
+    public ResponseEntity<String> deleteConnector(@NotBlank(message = "connectorId can't be blank") String connectorId) {
         connectService.deleteConnector(connectorId);
         return ResponseEntity.ok().build();
     }

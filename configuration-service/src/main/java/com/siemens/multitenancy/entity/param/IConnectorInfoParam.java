@@ -2,6 +2,8 @@ package com.siemens.multitenancy.entity.param;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -11,8 +13,11 @@ import java.util.List;
 @Data
 public class IConnectorInfoParam {
 
+    @NotBlank(message = "connectorId can't be blank")
     private String connectorId;
+    @NotNull(message = "dateTime can't be null")
     private Long dateTime;
+    @NotNull(message = "data can't be null")
     private Data data;
 
     @lombok.Data
