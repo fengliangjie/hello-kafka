@@ -4,8 +4,8 @@ import com.siemens.multitenancy.entity.param.*;
 import com.siemens.multitenancy.entity.vo.IConnectorInfoVo;
 import com.siemens.multitenancy.entity.vo.PageVo;
 import com.siemens.multitenancy.service.IConnectorService;
+import com.siemens.pcf.common.entity.ResponseResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +31,9 @@ public class IConnectorController {
      * @return
      */
     @PostMapping("/info")
-    public ResponseEntity<String> connectorInfo(@Validated @RequestBody IConnectorInfoParam param) {
+    public ResponseResult<String> connectorInfo(@Validated @RequestBody IConnectorInfoParam param) {
         connectService.info(param);
-        return ResponseEntity.ok().build();
+        return ResponseResult.success();
     }
 
     /**
@@ -44,8 +44,8 @@ public class IConnectorController {
      * @return
      */
     @GetMapping("/getConnectorInfos")
-    public ResponseEntity<PageVo<IConnectorInfoVo>> getConnectorInfos(@Validated ClientQueryParam clientQueryParam, @Validated PageParam pageParam) {
-        return ResponseEntity.ok(connectService.getConnectorInfos(clientQueryParam, pageParam));
+    public ResponseResult<PageVo<IConnectorInfoVo>> getConnectorInfos(@Validated ClientQueryParam clientQueryParam, @Validated PageParam pageParam) {
+        return ResponseResult.success(connectService.getConnectorInfos(clientQueryParam, pageParam));
     }
 
     /**
@@ -56,8 +56,8 @@ public class IConnectorController {
      * @return
      */
     @PutMapping("/updateConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> updateConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId, @Validated @RequestBody ClientUpdateParam clientUpdateParam) {
-        return ResponseEntity.ok(connectService.updateConnectorInfo(connectorId, clientUpdateParam.getConfigs()));
+    public ResponseResult<IConnectorInfoVo> updateConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId, @Validated @RequestBody ClientUpdateParam clientUpdateParam) {
+        return ResponseResult.success(connectService.updateConnectorInfo(connectorId, clientUpdateParam.getConfigs()));
     }
 
     /**
@@ -67,8 +67,8 @@ public class IConnectorController {
      * @return
      */
     @PostMapping("/uploadConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> uploadConnectorInfo(@Validated ClientUploadParam clientUploadParam) {
-        return ResponseEntity.ok(connectService.uploadConnectorInfo(clientUploadParam));
+    public ResponseResult<IConnectorInfoVo> uploadConnectorInfo(@Validated ClientUploadParam clientUploadParam) {
+        return ResponseResult.success(connectService.uploadConnectorInfo(clientUploadParam));
     }
 
     /**
@@ -78,8 +78,8 @@ public class IConnectorController {
      * @return
      */
     @GetMapping("/register")
-    public ResponseEntity<IConnectorInfoVo> registerConnector(@NotBlank(message = "connectorId can't be blank") String connectorId, @NotNull(message = "enable can't be null") boolean enable) {
-        return ResponseEntity.ok(connectService.registerConnector(connectorId, enable));
+    public ResponseResult<IConnectorInfoVo> registerConnector(@NotBlank(message = "connectorId can't be blank") String connectorId, @NotNull(message = "enable can't be null") boolean enable) {
+        return ResponseResult.success(connectService.registerConnector(connectorId, enable));
     }
 
     /**
@@ -89,8 +89,8 @@ public class IConnectorController {
      * @return
      */
     @GetMapping("/getConnectorInfo")
-    public ResponseEntity<IConnectorInfoVo> getConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId) {
-        return ResponseEntity.ok(connectService.getConnectorInfo(connectorId));
+    public ResponseResult<IConnectorInfoVo> getConnectorInfo(@NotBlank(message = "connectorId can't be blank") String connectorId) {
+        return ResponseResult.success(connectService.getConnectorInfo(connectorId));
     }
 
     /**
@@ -100,8 +100,8 @@ public class IConnectorController {
      * @return
      */
     @DeleteMapping("/deleteConnector")
-    public ResponseEntity<String> deleteConnector(@NotBlank(message = "connectorId can't be blank") String connectorId) {
+    public ResponseResult<String> deleteConnector(@NotBlank(message = "connectorId can't be blank") String connectorId) {
         connectService.deleteConnector(connectorId);
-        return ResponseEntity.ok().build();
+        return ResponseResult.success();
     }
 }
