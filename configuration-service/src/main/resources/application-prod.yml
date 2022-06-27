@@ -3,9 +3,14 @@ server:
   ssl:
     enabled: true
     key-store-type: jks
-    key-store: /Users/hakurei/Projects/hello-kafka/configuration-service/ssl/configuration-service.jks
+    key-store: /Users/hakurei/Projects/hello-kafka/http-ssl/configuration-service/configuration-service-server.jks
     key-store-password: 123456
-    key-alias: configuration-service
+    key-alias: configuration-service-server
+    trust-store: /Users/hakurei/Projects/hello-kafka/http-ssl/configuration-service/configuration-service-server.jks
+    trust-store-password: 123456
+    trust-store-type: jks
+    client-auth: need
+    trust-store-provider: SUN
 
 hibernate:
   connection:
