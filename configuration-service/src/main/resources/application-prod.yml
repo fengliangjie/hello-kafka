@@ -1,5 +1,11 @@
 server:
   port: 8886
+  ssl:
+    enabled: true
+    key-store-type: jks
+    key-store: /Users/hakurei/Projects/hello-kafka/configuration-service/ssl/configuration-service.jks
+    key-store-password: 123456
+    key-alias: configuration-service
 
 hibernate:
   connection:

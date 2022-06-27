@@ -2,6 +2,8 @@ package com.siemens.messagehandler.util;
 
 import com.google.common.collect.ImmutableList;
 import io.netty.channel.ChannelOption;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +96,8 @@ public class WebClientUtil {
         HttpClient httpClient = HttpClient.create(provider)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
                 .responseTimeout(Duration.ofMillis(responseTimeout))
-                .compress(true);
+                .compress(true)
+                .secure(t -> t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE)));
 
         DefaultUriBuilderFactory ubf = new DefaultUriBuilderFactory();
         ubf.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
