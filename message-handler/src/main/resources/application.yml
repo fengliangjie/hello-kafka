@@ -44,3 +44,9 @@ webclient:
   responseTimeout: 10000
   maxConnections: 1000
   maxPendingCount: 3000
+
+configuration-service:
+  ssl-client:
+    client-file: /Users/hakurei/Projects/hello-kafka/http-ssl/configuration-service/configuration-service-client.jks
+    client-type: JKS
+    client-password: 123456

@@ -2,8 +2,8 @@ package com.siemens.messagehandler.util;
 
 import com.google.common.collect.ImmutableList;
 import io.netty.channel.ChannelOption;
+import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +22,13 @@ import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
 import reactor.util.retry.Retry;
 
+import javax.net.ssl.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -43,35 +50,37 @@ public class WebClientUtil {
     /**
      * Codecs have limits for buffering data in memory to avoid application memory issues. By default those are set to 256KB
      */
-    int maxInMemorySize = 10 * 1024 * 1024;
+    int maxInMemorySize;
 
     /**
      * If the connection establishment attempt to the remote peer does not finish within the configured connect timeout (resolution: ms),
      * the connection establishment attempt fails. Default: 30s.
      */
-    int connectTimeout = 10000;
+    int connectTimeout;
 
     /**
      * default response timeout
      */
-    int responseTimeout = 3000;
+    int responseTimeout;
 
     /**
      * Default max connections. Fallback to 2 * available number of processors (but with a minimum value of 16)
      */
-    int maxConnections = 1000;
+    int maxConnections;
 
     /**
      * The maximum number of extra attempts at acquiring a connection to keep in a pending queue.
      * If -1 is specified, the pending queue does not have upper limit. Default to 2 * max connections.
      */
-    int maxPendingCount = 3000;
+    int maxPendingCount;
 
-    public WebClientUtil() {
-        this.webClient = builder().build();
-    }
+    String sslFilePath;
 
-    public WebClientUtil(int maxInMemorySize, int connectTimeout, int responseTimeout, int maxConnections, int maxPendingCount) {
+    String sslFileType;
+
+    String sslPassword;
+
+    public WebClientUtil(int maxInMemorySize, int connectTimeout, int responseTimeout, int maxConnections, int maxPendingCount, String sslFilePath, String sslFileType, String sslPassword) throws Exception {
         if (maxInMemorySize <= 0) {
             maxInMemorySize = 10 * 1024 * 1024;
         }
@@ -80,10 +89,33 @@ public class WebClientUtil {
         this.responseTimeout = responseTimeout;
         this.maxConnections = maxConnections;
         this.maxPendingCount = maxPendingCount;
+        this.sslFilePath = sslFilePath;
+        this.sslFileType = sslFileType;
+        this.sslPassword = sslPassword;
         this.webClient = builder().build();
     }
 
-    private WebClient.Builder builder() {
+    private WebClient.Builder builder() throws Exception {
+        DefaultUriBuilderFactory ubf = new DefaultUriBuilderFactory();
+        ubf.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
+        KeyStore keyStore = KeyStore.getInstance(sslFileType);
+        keyStore.load(getFileInputStream(sslFilePath), sslPassword.toCharArray());
+        return WebClient.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxInMemorySize))
+                .uriBuilderFactory(ubf)
+                .clientConnector(getClientHttpConnector(keyStore, sslPassword, keyStore));
+    }
+
+    public InputStream getFileInputStream(String sslFilePath) throws Exception {
+        File clientFile = new File(sslFilePath);
+        if (!clientFile.exists()) {
+            throw new Exception("Please upload client certificates： " + "");
+        }
+        return new FileInputStream(clientFile);
+    }
+
+    private ClientHttpConnector getClientHttpConnector(KeyStore keyStore, String keyStorePassword, KeyStore trustStore) throws Exception {
         ConnectionProvider provider = ConnectionProvider.builder("custom")
                 .maxConnections(maxConnections)
                 .maxIdleTime(Duration.ofSeconds(20))
@@ -93,19 +125,34 @@ public class WebClientUtil {
                 .pendingAcquireMaxCount(maxPendingCount)
                 .build();
 
+        SslContextBuilder builder = SslContextBuilder.forClient();
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
+        builder.keyManager(keyManagerFactory);
+
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+        trustManagerFactory.init(trustStore);
+        builder.trustManager(trustManagerFactory);
+        SslContext sslContext = builder.build();
         HttpClient httpClient = HttpClient.create(provider)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
                 .responseTimeout(Duration.ofMillis(responseTimeout))
                 .compress(true)
-                .secure(t -> t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE)));
-
-        DefaultUriBuilderFactory ubf = new DefaultUriBuilderFactory();
-        ubf.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-
-        return WebClient.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxInMemorySize))
-                .uriBuilderFactory(ubf)
-                .clientConnector(new ReactorClientHttpConnector(httpClient));
+                .secure(t -> t.sslContext(sslContext).handlerConfigurator(handler -> {
+            SSLEngine engine = handler.engine();
+            List<SNIMatcher> matchers = new LinkedList<>();
+            SNIMatcher matcher = new SNIMatcher(0) {
+                @Override
+                public boolean matches(SNIServerName serverName) {
+                    return true;
+                }
+            };
+            matchers.add(matcher);
+            SSLParameters params = new SSLParameters();
+            params.setSNIMatchers(matchers);
+            engine.setSSLParameters(params);
+        }));
+        return new ReactorClientHttpConnector(httpClient);
     }
 
     /**

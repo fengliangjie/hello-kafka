@@ -29,8 +29,17 @@ public class WebClientUtilConfig {
     @Value("${webclient.maxPendingCount:3000}")
     int maxPendingCount = 3000;
 
+    @Value("${configuration-service.ssl-client.client-file}")
+    String sslFilePath;
+
+    @Value("${configuration-service.ssl-client.client-type}")
+    String sslFileType;
+
+    @Value("${configuration-service.ssl-client.client-password}")
+    String sslPassword;
+
     @Bean
-    WebClientUtil webClientUtil() {
-        return new WebClientUtil(maxInMemorySize, connectTimeout, readTimeout, maxConnections, maxPendingCount);
+    WebClientUtil webClientUtil() throws Exception {
+        return new WebClientUtil(maxInMemorySize, connectTimeout, readTimeout, maxConnections, maxPendingCount, sslFilePath, sslFileType, sslPassword);
     }
 }
