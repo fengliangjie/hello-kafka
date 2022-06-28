@@ -15,31 +15,45 @@ import org.springframework.context.annotation.Configuration;
 public class WebClientUtilConfig {
 
     @Value("${webclient.maxInMemorySize:10485760}")
-    int maxInMemorySize = 10 * 1024 * 1024;
+    private int maxInMemorySize = 10 * 1024 * 1024;
 
     @Value("${webclient.connectTimeout:3000}")
-    int connectTimeout = 3000;
+    private int connectTimeout = 3000;
 
     @Value("${webclient.responseTimeout:3000}")
-    int readTimeout = 3000;
+    private int readTimeout = 3000;
 
     @Value("${webclient.maxConnections:1000}")
-    int maxConnections = 1000;
+    private int maxConnections = 1000;
 
     @Value("${webclient.maxPendingCount:3000}")
-    int maxPendingCount = 3000;
+    private int maxPendingCount = 3000;
 
     @Value("${configuration-service.ssl-client.client-file}")
-    String sslFilePath;
+    private String configurationServiceSslFilePath;
 
     @Value("${configuration-service.ssl-client.client-type}")
-    String sslFileType;
+    private String configurationServiceSslFileType;
 
     @Value("${configuration-service.ssl-client.client-password}")
-    String sslPassword;
+    private String configurationServiceSslPassword;
 
-    @Bean
-    WebClientUtil webClientUtil() throws Exception {
-        return new WebClientUtil(maxInMemorySize, connectTimeout, readTimeout, maxConnections, maxPendingCount, sslFilePath, sslFileType, sslPassword);
+    @Value("${pcf-service.ssl-client.client-file}")
+    private String pcfServiceSslFilePath;
+
+    @Value("${pcf-service.ssl-client.client-type}")
+    private String pcfServiceSslFileType;
+
+    @Value("${pcf-service.ssl-client.client-password}")
+    private String pcfServiceSslPassword;
+
+    @Bean(name = "configurationServiceWebClientUtil")
+    WebClientUtil configurationServiceWebClientUtil() throws Exception {
+        return new WebClientUtil(maxInMemorySize, connectTimeout, readTimeout, maxConnections, maxPendingCount, configurationServiceSslFilePath, configurationServiceSslFileType, configurationServiceSslPassword);
+    }
+
+    @Bean(name = "pcfServiceWebClientUtil")
+    WebClientUtil pcfServiceWebClientUtil() throws Exception {
+        return new WebClientUtil(maxInMemorySize, connectTimeout, readTimeout, maxConnections, maxPendingCount, pcfServiceSslFilePath, pcfServiceSslFileType, pcfServiceSslPassword);
     }
 }

@@ -41,3 +41,9 @@ flyway:
   user: ${hibernate.connection.username}
   password: ${hibernate.connection.password}
   baselineOnMigrate: true
+
+message-handler:
+  ssl-client:
+    client-file: /Users/hakurei/Projects/hello-kafka/http-ssl/message-handler/message-handler-client.jks
+    client-type: JKS
+    client-password: 123456

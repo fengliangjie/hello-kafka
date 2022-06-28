@@ -1,5 +1,16 @@
 server:
   port: 8887
+  ssl:
+    enabled: true
+    key-store-type: jks
+    key-store: /Users/hakurei/Projects/hello-kafka/http-ssl/message-handler/message-handler-server.jks
+    key-store-password: 123456
+    key-alias: message-handler-server
+    trust-store: /Users/hakurei/Projects/hello-kafka/http-ssl/message-handler/message-handler-server.jks
+    trust-store-password: 123456
+    trust-store-type: jks
+    client-auth: need
+    trust-store-provider: SUN
 
 kafka:
   ssl:
@@ -46,6 +57,12 @@ webclient:
   maxPendingCount: 3000
 
 configuration-service:
+  ssl-client:
+    client-file: /Users/hakurei/Projects/hello-kafka/http-ssl/configuration-service/configuration-service-client.jks
+    client-type: JKS
+    client-password: 123456
+
+pcf-service:
   ssl-client:
     client-file: /Users/hakurei/Projects/hello-kafka/http-ssl/configuration-service/configuration-service-client.jks
     client-type: JKS

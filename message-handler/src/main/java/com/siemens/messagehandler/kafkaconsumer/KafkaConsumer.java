@@ -27,7 +27,9 @@ import static com.siemens.messagehandler.constant.ConstantValus.*;
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
-    private final WebClientUtil webClientUtil;
+    private final WebClientUtil configurationServiceWebClientUtil;
+
+    private final WebClientUtil pcfServiceWebClientUtil;
 
     private final KafkaAclUtil kafkaAclUtil;
 
@@ -35,7 +37,7 @@ public class KafkaConsumer {
      * consumer of data
      */
     @KafkaListener(topicPattern = TOPIC_PATTERN_DATA, groupId = GROUP_DATA)
-    public void kafkaListener(ConsumerRecord<String, String> consumerRecord) {
+    public void iConnectorDataListener(ConsumerRecord<String, String> consumerRecord) {
         // tenantId
         String tenantId = getTenantId(consumerRecord);
         if (!StringUtils.hasText(tenantId)) {
@@ -46,7 +48,7 @@ public class KafkaConsumer {
         Map<String, String> headers = new HashMap<>(16);
         headers.put(X_TENANT_ID, tenantId);
 
-        Mono<ResponseEntity<String>> mono = webClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, JSON.parseObject(consumerRecord.value()));
+        Mono<ResponseEntity<String>> mono = pcfServiceWebClientUtil.post(PCF_SERVICE_DATA_URL, headers, null, JSON.parseObject(consumerRecord.value()));
         mono.subscribe();
     }
 
@@ -56,7 +58,7 @@ public class KafkaConsumer {
      * @param consumerRecord
      */
     @KafkaListener(topicPattern = TOPIC_PATTERN_INFO, groupId = GROUP_INFO)
-    public void iConnectRegistrationListener(ConsumerRecord<String, String> consumerRecord) {
+    public void iConnectInfoListener(ConsumerRecord<String, String> consumerRecord) {
         // tenantId
         String tenantId = getTenantId(consumerRecord);
         if (!StringUtils.hasText(tenantId)) {
@@ -72,7 +74,7 @@ public class KafkaConsumer {
         Map<String, String> headers = new HashMap<>(16);
         headers.put(X_TENANT_ID, tenantId);
 
-        Mono<ResponseEntity<String>> mono = webClientUtil.post(CONFIGURATION_SERVICE_INFO_URL, headers, null, value);
+        Mono<ResponseEntity<String>> mono = configurationServiceWebClientUtil.post(CONFIGURATION_SERVICE_INFO_URL, headers, null, value);
         mono.subscribe();
     }
 
