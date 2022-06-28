@@ -27,5 +27,3 @@ validity_date=3650
 keytool -genkey -alias $server_alias_name -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -keystore $server_keystore_name.jks -dname "CN=$dns_name" -validity $validity_date -storepass $password -keypass $password
 #export server cert
 keytool -export -alias $server_alias_name -file $server_keystore_name.cer -keystore $server_keystore_name.jks -storepass $password -keypass $password
-
-
