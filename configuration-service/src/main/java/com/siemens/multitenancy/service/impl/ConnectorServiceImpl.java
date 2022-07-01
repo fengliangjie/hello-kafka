@@ -9,6 +9,7 @@ import com.siemens.multitenancy.entity.vo.PageVo;
 import com.siemens.multitenancy.mapper.ConfigurationMapper;
 import com.siemens.multitenancy.repository.ConfigurationRepository;
 import com.siemens.multitenancy.service.IConnectorService;
+import com.siemens.pcf.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -68,7 +69,7 @@ public class ConnectorServiceImpl implements IConnectorService {
             ConfigurationMapper.updateParamMapToPo(info, configParamList);
             return ConfigurationMapper.infoPoMapToVo(info);
         } else {
-            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
+            throw new BusinessException(String.format("Can't find connectorId %s in postgres db", connectorId));
         }
     }
 
@@ -76,7 +77,7 @@ public class ConnectorServiceImpl implements IConnectorService {
     public IConnectorInfoVo uploadConnectorInfo(ClientUploadParam uploadParam) {
         Optional<IConnectorInfo> optional = configurationRepository.findByConnectorId(uploadParam.getConnectorId());
         if (optional.isEmpty()) {
-            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", uploadParam.getConnectorId()));
+            throw new BusinessException(String.format("Can't find connectorId %s in postgres db", uploadParam.getConnectorId()));
         }
         IConnectorInfo info = optional.get();
         ConfigurationMapper.uploadParamMapToPo(info, uploadParam);
@@ -109,7 +110,7 @@ public class ConnectorServiceImpl implements IConnectorService {
         if (optional.isPresent()) {
             return ConfigurationMapper.infoPoMapToVo(optional.get());
         } else {
-            throw new RuntimeException(String.format("Can't find connectorId %s in postgres db", connectorId));
+            throw new BusinessException(String.format("Can't find connectorId %s in postgres db", connectorId));
         }
     }
 
