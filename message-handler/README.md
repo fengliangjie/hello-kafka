@@ -16,7 +16,7 @@
     2.查看话题列表
         kafka-topics.sh --list --zookeeper zookeeper:2181
     3.acl赋权
-        kafka-acls.sh --authorizer-properties zookeeper.connect=zookeeper:2181 --add --allow-principal User:"CN=siemens_001" --operation All --topic iconnector-info.siemens_001 --group "*" --cluster
+        kafka-acls.sh --authorizer-properties zookeeper.connect=zookeeper:2181 --add --allow-principal User:"CN=dec" --operation All --topic iconnector-info.dec --group "*" --cluster
         kafka-acls.sh --authorizer-properties zookeeper.connect=zookeeper:2181 --add --allow-principal User:"CN=siemens_001" --operation Write --topic iconnector-info.siemens_001 --cluster
         (消费者被赋权后需重启服务才能收到消息)
         (topics模式：如果一个消费者同时消费多个topic，那么该消费者必须对所有的topic都有权限，否则所有的topic都不能消费
