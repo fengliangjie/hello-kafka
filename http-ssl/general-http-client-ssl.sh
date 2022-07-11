@@ -3,24 +3,24 @@
 CURRENT_DIR=$(cd $(dirname $0);pwd)
 cd ${CURRENT_DIR}
 
-common_name=message-handler
+common_name=configuration-service
 
 #The directory to save keystore
 DIR_NAME=$common_name
 cd $DIR_NAME
 
 #server keystore alias
-server_alias_name=$common_name-server
+server_alias_name=sigreen-connect-configuration-service
 #server keystore name
-server_keystore_name=$common_name-server
+server_keystore_name=sigreen-connect-configuration-service
 #client keystore alias
-client_alias_name=$common_name-client
+client_alias_name=sigreen-connect-configuration-service-client
 #client keystore name
-client_keystore_name=$common_name-client
+client_keystore_name=sigreen-connect-configuration-service-client
 #client dns name
 dns_name=client
 #password
-password=123456
+password=siemens
 #expiration date
 validity_date=3650
 
