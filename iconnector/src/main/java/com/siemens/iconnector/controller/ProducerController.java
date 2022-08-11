@@ -20,8 +20,8 @@ public class ProducerController {
     private final KafkaProducer kafkaProducer;
 
     @PostMapping("/send")
-    public String sendJson(String topic, @RequestBody JSONObject data) {
-        kafkaProducer.send(topic, data.toJSONString());
+    public String sendJson(String topic, String type, @RequestBody JSONObject data) throws Exception {
+        kafkaProducer.send(topic, type, data.toJSONString());
         return "success";
     }
 }
