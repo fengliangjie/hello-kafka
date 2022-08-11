@@ -1,12 +1,222 @@
-version: '3'
+version: '3.8'
 
 services:
-  iconnector:
-    build: .
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    hostname: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./zookeeper/data:/data
+    networks:
+      - proxy-redirect
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    hostname: kafka.sigreen-connect.cn
+    ports:
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LISTENERS: SSL://kafka.sigreen-connect.cn:9093
+      KAFKA_ADVERTISED_LISTENERS: SSL://kafka.sigreen-connect.cn:9093
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/sigreen-connect-kafka-server-keystore.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: 123456
+      KAFKA_SSL_KEY_PASSWORD: 123456
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/sigreen-connect-kafka-server-truststore.jks
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: 123456
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
+      KAFKA_SECURITY_PROTOCOL: SSL
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SSL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
+      KAFKA_SUPER_USERS: User:CN=kafka.sigreen-connect.cn
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./code/java/message-handler/ssl:/etc/kafka/secrets/
+      - ./kafka/data:/kafka
+    networks:
+      - proxy-redirect
+  postgres:
+    image: postgres:alpine3.14
+    container_name: pcf_postgres
+    hostname: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - proxy-redirect
+  engine:
+    build:
+      context: .
+      dockerfile: ./code/java/pcf-engine/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/pcf_engine
+    container_name: pcf_engine
+    hostname: engine
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      KEYCLOAK_REALM: sigreen
+      KEYCLOAK_BASE_URL: https://139.24.142.187/auth/
+      KEYCLOAK_CLIENT_NAME: sigreen-backend
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      TZ: ${TIME_ZONE}
+    depends_on:
+      - postgres
+    ports:
+      - "8082:8082"
+#    volumes:
+#      - pcf_engine:/opt/pcf_engine
+    networks:
+      - proxy-redirect
+  web-bff:
+    build:
+      context: .
+      dockerfile: ./code/java/web-bff/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/web-bff
+    container_name: web_bff
+    hostname: web_bff
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: dev # dev to use dummy key for testing since not yet have a auth server
+      # SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      # JWK_SET_URI: http://139.24.237.118:8080/auth/realms/sigreen/protocol/openid-connect/certs
+      PCF_ENGINE_BASE_URL: http://engine:8082
+    ports:
+      - "8083:8083"
+    networks:
+      - proxy-redirect
+  configuration-service:
+    build:
+      context: .
+      dockerfile: ./code/java/configuration-service/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/configuration-service
+    container_name: configuration-service
+    hostname: config-service.sigreen-connect.cn
+    restart: always
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    tty: true
+    volumes:
+      - ./credentials/sigreen-connect-configuration-service.p12:/certs/sigreen-connect-configuration-service.p12
+      - ./credentials/sigreen-connect-trust.p12:/certs/sigreen-connect-trust.p12
+      - ./credentials/sigreen-connect-message-handler.p12:/certs/sigreen-connect-message-handler.p12
+    networks:
+      - proxy-redirect
+  message-handler:
+    build:
+      context: .
+      dockerfile: ./code/java/message-handler/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/message-handler
+    container_name: message-handler
+    hostname: message-handler.sigreen-connect.cn
+    restart: always
+    ports:
+      - "8085:8085"
+    depends_on:
+      - kafka
+    links:
+      - kafka
+    tty: true
+    volumes:
+      - ./code/java/message-handler/ssl/sigreen-connect-kafka-server-keystore.jks:/certs/sigreen-connect-kafka-server-keystore.jks
+      - ./code/java/message-handler/ssl/sigreen-connect-kafka-server-truststore.jks:/certs/sigreen-connect-kafka-server-truststore.jks
+      - ./credentials/sigreen-connect-message-handler.p12:/certs/sigreen-connect-message-handler.p12
+      - ./credentials/sigreen-connect-trust.p12:/certs/sigreen-connect-trust.p12
+      - ./credentials/sigreen-connect-configuration-service.p12:/certs/sigreen-connect-configuration-service.p12
+      - ./credentials/sigreen-connect-pcf-engine.p12:/certs/sigreen-connect-pcf-engine.p12
+    networks:
+      - proxy-redirect
+  mobile-bff:
+    build:
+      context: .
+      dockerfile: ./code/java/mobile-bff/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/mobile-bff
+    container_name: mobile_bff
+    hostname: mobile_bff
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      PCF_ENGINE_SERVICE_URL: http://engine:8082/v1/history/details
+    ports:
+      - "8086:8086"
+    networks:
+      - proxy-redirect
+  thirdparty-bff:
+    build:
+      context: .
+      dockerfile: ./code/java/third-party-app-bff/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/thirdparty-bff
+    container_name: thirdparty_bff
+    hostname: thirdparty_bff
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: dev # dev to use dummy key for testing since not yet have a auth server
+      # SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      PCF_ENGINE_SERVICE_URL: http://engine:8082/v1/integration/scope12
+    ports:
+      - "8087:8087"
+    networks:
+      - proxy-redirect
+  web:
+    build:
+      context: .
+      dockerfile: ./code/angular/Dockerfile
+    image: cr.siemens.com/cn-pcf/sigreen-connect/web
+    container_name: web
+    hostname: web
+    restart: always
+    environment:
+      TZ: ${TIME_ZONE}
+    ports:
+      - "5000:5000"
+    networks:
+      - proxy-redirect
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./code/others/api-gateway/Dockerfile
+    image: pcf_nginx
+    hostname: sigreen-connect.cn
+    container_name: pcf_nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    environment:
+      - NGINX_HOST=sigreen-connect.cn
+      - NGINX_PORT=443
+    privileged: true
+    restart: always
+    links:
+      - web-bff
+    networks:
+      - proxy-redirect
+
+  iconnect:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     container_name: iconnector
     hostname: iconnector
     restart: always
-    image: iconnector:1.0.0
+    image: iconnector
     ports:
       - "8888:8888"
     depends_on:
@@ -15,4 +225,16 @@ services:
       - kafka
     tty: true
     volumes:
-      - ./ssl:/certs/
+      - ./credentials/kafka/general-ssl-jks/dec/dec-sigreen-connect-client-keystore.jks:/certs/dec-sigreen-connect-client-keystore.jks
+      - ./credentials/kafka/general-ssl-jks/dec/dec-sigreen-connect-client-truststore.jks:/certs/dec-sigreen-connect-client-truststore.jks
+      - ./credentials/kafka/rsa/ca-key:/certs/jwt/ca-key
+      - ./credentials/kafka/rsa/ca-key-pub:/certs/jwt/ca-key-pub
+    networks:
+      - proxy-redirect
+
+networks:
+  proxy-redirect:
+    name: proxy-redirect
+volumes:
+  postgres_data:
+#  pcf_engine:

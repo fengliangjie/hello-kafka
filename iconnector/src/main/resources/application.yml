@@ -2,13 +2,13 @@ server:
     port: 8888
 spring:
     kafka:
-        bootstrap-servers: kafka:9093
+        bootstrap-servers: kafka.sigreen-connect.cn:9093
         security:
             protocol: "ssl"
         ssl:
-            trust-store-location: file:/certs/siemens_001.client.truststore.jks
+            trust-store-location: file:/certs/dec-sigreen-connect-client-truststore.jks
             trust-store-password: 123456
-            key-store-location: file:/certs/siemens_001.client.keystore.jks
+            key-store-location: file:/certs/dec-sigreen-connect-client-keystore.jks
             key-store-password: 123456
             key-password: 123456
 
