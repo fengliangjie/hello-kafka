@@ -26,3 +26,7 @@ spring:
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
             value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+jwt:
+ certificate: /certs/jwt/sigreen_connect_ca.cer
+ private: /certs/jwt/sigreen_connect_ca.pkcs8
+

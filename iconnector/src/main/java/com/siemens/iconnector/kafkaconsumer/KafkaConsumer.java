@@ -3,7 +3,6 @@ package com.siemens.iconnector.kafkaconsumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.siemens.iconnector.util.JwtUtils;
-import com.siemens.iconnector.util.RsaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Header;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.Iterator;
 
 import static com.siemens.iconnector.constant.ConstantValus.*;
+import static com.siemens.iconnector.util.JwtUtils.getCertificateFromHeader;
+import static com.siemens.iconnector.util.JwtUtils.getPublicKeyFromCertificate;
 
 /**
  * @author: liangjie.feng
@@ -22,7 +23,7 @@ import static com.siemens.iconnector.constant.ConstantValus.*;
 @Component
 public class KafkaConsumer {
 
-    @KafkaListener(topics = "iconnector-config.dec-conId_001", groupId = "group-config")
+    @KafkaListener(topicPattern = "iconnector-config.*", groupId = "group-config")
     public void kafkaListener(ConsumerRecord<String, String> consumerRecord) throws Exception {
         JSONObject value = JSON.parseObject(getValue(consumerRecord));
 
@@ -31,12 +32,13 @@ public class KafkaConsumer {
 
     private String getValue(ConsumerRecord<String, String> consumerRecord) throws Exception {
         Iterator<Header> iterator = consumerRecord.headers().headers(CONTENT_TYPE).iterator();
+        String value = consumerRecord.value();
         if (iterator.hasNext() && new String(iterator.next().value()).equals(APPLICATION_JOSE)) {
             System.out.println("=====解析jws");
-            return JwtUtils.getMessageFromToken(consumerRecord.value(), RsaUtils.getPublicKey("/certs/jwt/ca-key-pub"));
+            return JwtUtils.getMessageFromToken(value, getPublicKeyFromCertificate(getCertificateFromHeader(value)));
         } else {
             System.out.println("=====解析json");
-            return consumerRecord.value();
+            return value;
         }
     }
 }

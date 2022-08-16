@@ -91,7 +91,7 @@ public class RsaUtils {
         writeFile(privateKeyFilename, privateKeyBytes);
     }
 
-    private static byte[] readFile(String fileName) throws Exception {
+    public static byte[] readFile(String fileName) throws Exception {
         return Files.readAllBytes(new File(fileName).toPath());
     }
 

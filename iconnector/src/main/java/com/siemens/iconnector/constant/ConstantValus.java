@@ -60,6 +60,8 @@ public final class ConstantValus {
 
     public static final String JWT_PRIVATE_KEY = "jwt.private";
 
-    public static final String JWT_PUBLIC_KEY = "jwt.public.%s";
+    public static final String JWT_CERTIFICATE = "jwt.certificate";
+
+    public static final String SIGNER_CERTIFICATE = "Signer-Certificate";
 
 }

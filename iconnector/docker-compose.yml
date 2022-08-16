@@ -227,8 +227,8 @@ services:
     volumes:
       - ./credentials/kafka/general-ssl-jks/dec/dec-sigreen-connect-client-keystore.jks:/certs/dec-sigreen-connect-client-keystore.jks
       - ./credentials/kafka/general-ssl-jks/dec/dec-sigreen-connect-client-truststore.jks:/certs/dec-sigreen-connect-client-truststore.jks
-      - ./credentials/kafka/rsa/ca-key:/certs/jwt/ca-key
-      - ./credentials/kafka/rsa/ca-key-pub:/certs/jwt/ca-key-pub
+      - ./credentials/kafka/rsa/sigreen_connect_ca.cer:/certs/jwt/sigreen_connect_ca.cer
+      - ./credentials/kafka/rsa/sigreen_connect_ca.pkcs8:/certs/jwt/sigreen_connect_ca.pkcs8
     networks:
       - proxy-redirect
 
